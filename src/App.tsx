@@ -42,6 +42,7 @@ const Navbar = () => {
         <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors">
           Products <ChevronDown className="w-4 h-4" />
         </div>
+        <a href="#careers" className="cursor-pointer hover:text-secondary-accent transition-colors">Careers</a>
         <div className="cursor-pointer hover:text-secondary-accent transition-colors">Customers</div>
         <div className="cursor-pointer hover:text-secondary-accent transition-colors">Support</div>
       </div>
@@ -375,6 +376,88 @@ const Testimonials = () => {
   );
 };
 
+const Careers = () => {
+  const benefits = [
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Healthy work-life balance" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "5 days work week*" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Leadership Development" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "No overtime, No Loss of Pay" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Career growth opportunities" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Paid leave on Birthday" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Yearly Vacation" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Get professional education" },
+  ];
+
+  return (
+    <section className="py-32 bg-white px-6 lg:px-20" id="careers">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-[12px] font-black tracking-[0.4em] uppercase text-black mb-4 bg-accent inline-block px-2 py-1 rounded-md">Join Our Team</h2>
+            <h3 className="text-5xl md:text-7xl font-black tracking-tighter text-black uppercase leading-tight">Get Your <br/><span className="text-gradient-ai">Dream Job</span></h3>
+            <p className="text-xl text-on-surface-variant font-medium leading-relaxed max-w-xl">
+              New opportunities and exciting projects emerge every day due to the dynamic nature of our business. With your strongest abilities, you will be able to try new ideas and make contributions.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {benefits.map((benefit, idx) => (
+              <div key={idx} className="flex items-center gap-3 p-4 bg-surface-container-low rounded-2xl brutal-border">
+                {benefit.icon}
+                <span className="text-sm font-bold text-black">{benefit.text}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="bg-surface-container-low p-10 md:p-16 rounded-[3rem] brutal-border yellow-glow">
+          <div className="text-center mb-10">
+            <h4 className="text-2xl font-black uppercase tracking-tight mb-2">Apply Now</h4>
+            <p className="text-on-surface-variant text-sm font-medium">Upload your resume and join the future.</p>
+          </div>
+          
+          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Position Interested In</label>
+              <select className="w-full bg-white brutal-border p-5 rounded-2xl focus:ring-4 focus:ring-accent/50 text-black appearance-none font-mono text-sm font-bold">
+                <option>Frontend Engineer</option>
+                <option>Backend Architect</option>
+                <option>AI Specialist</option>
+                <option>UI/UX Designer</option>
+                <option>Project Manager</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Resume / CV</label>
+              <div className="relative group">
+                <input 
+                  type="file" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                  accept=".pdf,.doc,.docx"
+                />
+                <div className="w-full bg-white brutal-border border-dashed border-2 p-10 rounded-2xl flex flex-col items-center justify-center gap-4 group-hover:bg-accent/5 transition-colors">
+                  <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center">
+                    <ExternalLink className="w-6 h-6 text-secondary-accent" />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-black">Click to upload or drag and drop</p>
+                    <p className="text-[10px] text-on-surface-variant uppercase font-black tracking-widest mt-1">PDF, DOCX (Max 5MB)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button className="w-full py-6 btn-gradient rounded-full text-white font-black text-sm uppercase tracking-[0.2em] shadow-xl shadow-secondary-accent/20 hover:opacity-90 transition-all">
+              Submit Application
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 const Contact = () => {
   return (
     <section className="py-32 bg-surface-container-low px-6 lg:px-20" id="contact">
@@ -497,6 +580,7 @@ export default function App() {
         <Process />
         <Pricing />
         <Portfolio />
+        <Careers />
         <Testimonials />
         <Contact />
       </main>
