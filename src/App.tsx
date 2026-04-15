@@ -25,10 +25,10 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const Navbar = () => {
+const Navbar = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
     <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline px-8 py-4 flex justify-between items-center max-w-full">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
         <div className="w-8 h-8 bg-gradient-to-br from-[#FF2D55] to-[#FF9500] rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
         </div>
@@ -37,20 +37,21 @@ const Navbar = () => {
       
       <div className="hidden md:flex gap-8 items-center font-sans text-[14px] font-bold">
         <a href="#about" className="cursor-pointer hover:text-secondary-accent transition-colors">About</a>
-        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors">
+        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Company details coming soon")}>
           Company <ChevronDown className="w-4 h-4" />
         </div>
-        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors">
+        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Product catalog opening...")}>
           Products <ChevronDown className="w-4 h-4" />
         </div>
         <a href="#careers" className="cursor-pointer hover:text-secondary-accent transition-colors">Careers</a>
-        <div className="cursor-pointer hover:text-secondary-accent transition-colors">Customers</div>
-        <div className="cursor-pointer hover:text-secondary-accent transition-colors">Support</div>
+        <div className="cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Customer stories loading...")}>Customers</div>
+        <div className="cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Support portal opening...")}>Support</div>
       </div>
 
       <motion.button 
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
+        onClick={() => onAction("Redirecting to onboarding...")}
         className="btn-gradient px-8 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-secondary-accent/20"
       >
         Join Us
@@ -59,7 +60,7 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => {
+const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
   const [word, setWord] = useState("Products");
   
   useEffect(() => {
@@ -75,7 +76,8 @@ const Hero = () => {
       <motion.div 
         animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[25%] left-[15%] p-4 bg-[#FF9500]/20 rounded-xl brutal-border hidden lg:block"
+        className="absolute top-[25%] left-[15%] p-4 bg-[#FF9500]/20 rounded-xl brutal-border hidden lg:block cursor-pointer"
+        onClick={() => onAction("Server status: Optimal")}
       >
         <Server className="w-10 h-10 text-[#FF9500]" />
       </motion.div>
@@ -83,7 +85,8 @@ const Hero = () => {
       <motion.div 
         animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] right-[15%] p-4 bg-[#7000FF]/10 rounded-xl brutal-border hidden lg:block"
+        className="absolute top-[20%] right-[15%] p-4 bg-[#7000FF]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
+        onClick={() => onAction("Payment gateway: Secure")}
       >
         <CreditCard className="w-10 h-10 text-[#7000FF]" />
       </motion.div>
@@ -91,7 +94,8 @@ const Hero = () => {
       <motion.div 
         animate={{ x: [0, 20, 0] }}
         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[20%] left-[10%] p-4 bg-[#007AFF]/10 rounded-xl brutal-border hidden lg:block"
+        className="absolute bottom-[20%] left-[10%] p-4 bg-[#007AFF]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
+        onClick={() => onAction("System speed: 1.2ms")}
       >
         <Zap className="w-10 h-10 text-[#007AFF]" />
       </motion.div>
@@ -99,7 +103,8 @@ const Hero = () => {
       <motion.div 
         animate={{ scale: [1, 1.1, 1] }}
         transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[15%] right-[12%] p-4 bg-[#34C759]/10 rounded-xl brutal-border hidden lg:block"
+        className="absolute bottom-[15%] right-[12%] p-4 bg-[#34C759]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
+        onClick={() => onAction("Analytics: Real-time active")}
       >
         <BarChart3 className="w-10 h-10 text-[#34C759]" />
       </motion.div>
@@ -145,8 +150,21 @@ const Hero = () => {
           transition={{ delay: 0.6 }}
           className="flex justify-center gap-6 pt-4"
         >
-          <button className="btn-gradient px-10 py-4 rounded-full font-bold text-lg shadow-xl shadow-secondary-accent/20">Get Started</button>
-          <button className="bg-white brutal-border px-10 py-4 rounded-full font-bold text-lg hover:bg-surface-container-low transition-colors">Learn More</button>
+          <button 
+            onClick={() => onAction("Initializing setup wizard...")}
+            className="btn-gradient px-10 py-4 rounded-full font-bold text-lg shadow-xl shadow-secondary-accent/20"
+          >
+            Get Started
+          </button>
+          <button 
+            onClick={() => {
+              const el = document.getElementById('about');
+              el?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="bg-white brutal-border px-10 py-4 rounded-full font-bold text-lg hover:bg-surface-container-low transition-colors"
+          >
+            Learn More
+          </button>
         </motion.div>
       </div>
     </section>
@@ -204,7 +222,197 @@ const About = () => {
   );
 };
 
-const Expertise = () => {
+const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
+  const products = [
+    {
+      id: "real-estate",
+      title: "Real Estate Solutions",
+      subtitle: "Find Your Dream Home",
+      description: "Search from over 10,000+ properties for sale and rent.",
+      accent: "#FF9500",
+      categories: ["Buy", "Rent", "Sell"],
+      items: [
+        { name: "Modern Villa", price: "₹8.5 Cr", location: "Mumbai", img: "https://picsum.photos/seed/house1/400/300" },
+        { name: "Sky Apartment", price: "₹12.5 Cr", location: "Bangalore", img: "https://picsum.photos/seed/house2/400/300" },
+        { name: "Beach House", price: "₹9.7 Cr", location: "Goa", img: "https://picsum.photos/seed/house3/400/300" }
+      ]
+    },
+    {
+      id: "car-service",
+      title: "Automotive Platforms",
+      subtitle: "Keep Your Car Clean",
+      description: "Find the best car wash and detailing services near you.",
+      accent: "#007AFF",
+      categories: ["Wash", "Detailing", "Oil Change"],
+      items: [
+        { name: "Full Service Wash", price: "₹2,999", location: "Premium", img: "https://picsum.photos/seed/car1/400/300" },
+        { name: "Express Detail", price: "₹14,699", location: "Interior", img: "https://picsum.photos/seed/car2/400/300" },
+        { name: "Ceramic Coating", price: "₹49,999", location: "Exterior", img: "https://picsum.photos/seed/car3/400/300" }
+      ]
+    },
+    {
+      id: "food-delivery",
+      title: "Food & Logistics",
+      subtitle: "Gourmet at Your Door",
+      description: "Discover the best cuisines from top-rated local restaurants.",
+      accent: "#FF2D55",
+      categories: ["Pizza", "Burgers", "Sushi", "Desserts"],
+      items: [
+        { name: "Burger Bistro", price: "₹599", location: "4.8 ★", img: "https://picsum.photos/seed/food1/400/300" },
+        { name: "Sushi Master", price: "₹1,299", location: "4.9 ★", img: "https://picsum.photos/seed/food2/400/300" },
+        { name: "Pasta Palace", price: "₹899", location: "4.7 ★", img: "https://picsum.photos/seed/food3/400/300" }
+      ]
+    },
+    {
+      id: "home-services",
+      title: "Service Marketplaces",
+      subtitle: "Professional Home Services",
+      description: "Get top-rated professionals for your home service needs.",
+      accent: "#34C759",
+      categories: ["Cleaning", "Plumbing", "Electrical", "Moving"],
+      items: [
+        { name: "House Cleaning", price: "₹1,899", location: "Verified", img: "https://picsum.photos/seed/service1/400/300" },
+        { name: "Plumbing Repair", price: "₹799", location: "Expert", img: "https://picsum.photos/seed/service2/400/300" },
+        { name: "TV Mounting", price: "₹1,299", location: "Licensed", img: "https://picsum.photos/seed/service3/400/300" }
+      ]
+    },
+    {
+      id: "travel",
+      title: "Travel & Hospitality",
+      subtitle: "Explore the World",
+      description: "Find the best deals on hotels, flights and car rentals for your next trip.",
+      accent: "#7000FF",
+      categories: ["Hotels", "Flights", "Cars", "Tours"],
+      items: [
+        { name: "Honolulu, HI", price: "₹1,10,000", location: "Resort", img: "https://picsum.photos/seed/travel1/400/300" },
+        { name: "Paris, France", price: "₹1,45,000", location: "Luxury", img: "https://picsum.photos/seed/travel2/400/300" },
+        { name: "Cancun, Mexico", price: "₹95,000", location: "All-Inc", img: "https://picsum.photos/seed/travel3/400/300" }
+      ]
+    }
+  ];
+
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % products.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const current = products[index];
+
+  return (
+    <section className="py-20 bg-white px-6 lg:px-20 overflow-hidden">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-center mb-12 gap-6">
+          <div>
+            <h2 className="text-[12px] font-black tracking-[0.4em] uppercase text-black mb-2 bg-accent inline-block px-2 py-1 rounded-md">Our Ecosystem</h2>
+            <h3 className="text-4xl font-black tracking-tight text-black uppercase">Multi-Vertical Expertise</h3>
+          </div>
+          <div className="flex gap-2">
+            {products.map((_, i) => (
+              <button 
+                key={i} 
+                onClick={() => setIndex(i)}
+                className={`w-12 h-1.5 rounded-full transition-all duration-500 ${i === index ? 'bg-black w-20' : 'bg-outline'}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="relative bg-surface-container-low rounded-[3rem] brutal-border p-8 md:p-12 yellow-glow min-h-[700px] flex flex-col">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={current.id}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.6, ease: "circOut" }}
+              className="flex flex-col h-full"
+            >
+              {/* Mock App Header */}
+              <div className="flex justify-between items-center mb-10 border-b border-outline pb-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-black" style={{ backgroundColor: current.accent }}>Z</div>
+                  <span className="font-black uppercase tracking-tighter text-xl">Zynapse {current.id.split('-')[0]}</span>
+                </div>
+                <div className="flex-grow max-w-md mx-10 hidden md:block">
+                  <div className="relative">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full border-2 border-outline"></div>
+                    <div className="w-full bg-white brutal-border rounded-full py-2 px-10 text-[10px] font-bold text-on-surface-variant">Search for {current.id.replace('-', ' ')}...</div>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="w-8 h-8 rounded-full bg-white brutal-border cursor-pointer hover:bg-accent transition-colors" onClick={() => onAction("Notifications: 0 new")}></div>
+                  <div className="w-8 h-8 rounded-full bg-white brutal-border cursor-pointer hover:bg-accent transition-colors" onClick={() => onAction("User profile opening...")}></div>
+                </div>
+              </div>
+
+              {/* Categories */}
+              <div className="flex gap-4 mb-10 overflow-x-auto pb-2 no-scrollbar">
+                {current.categories.map((cat, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group" onClick={() => onAction(`Filtering by ${cat}...`)}>
+                    <div className="w-14 h-14 rounded-2xl bg-white brutal-border flex items-center justify-center shadow-sm group-hover:bg-accent transition-colors">
+                       <div className="w-6 h-6 rounded-lg" style={{ backgroundColor: current.accent, opacity: 0.2 }}></div>
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-widest">{cat}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 flex-grow">
+                <div className="lg:col-span-4 space-y-6">
+                  <h4 className="text-4xl md:text-5xl font-black tracking-tight text-black leading-tight">
+                    {current.subtitle}
+                  </h4>
+                  <p className="text-on-surface-variant font-medium text-lg leading-relaxed">
+                    {current.description}
+                  </p>
+                  <button 
+                    onClick={() => onAction(`Launching ${current.title} demo...`)}
+                    className="px-8 py-4 rounded-full font-black uppercase text-xs tracking-widest text-white shadow-lg transition-all hover:scale-105"
+                    style={{ backgroundColor: current.accent, boxShadow: `0 10px 20px -5px ${current.accent}66` }}
+                  >
+                    Explore Platform
+                  </button>
+                </div>
+
+                <div className="lg:col-span-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    {current.items.map((item, i) => (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.1 + 0.3 }}
+                        key={i}
+                        onClick={() => onAction(`Viewing details for ${item.name}...`)}
+                        className="bg-white rounded-2xl brutal-border overflow-hidden group cursor-pointer"
+                      >
+                        <div className="h-40 overflow-hidden">
+                          <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                        </div>
+                        <div className="p-5 space-y-2">
+                          <div className="flex justify-between items-start">
+                            <h5 className="font-black text-sm uppercase tracking-tight">{item.name}</h5>
+                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-surface-container-high" style={{ color: current.accent }}>{item.location}</span>
+                          </div>
+                          <p className="text-xl font-black text-black">{item.price}</p>
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Expertise = ({ onAction }: { onAction: (m: string) => void }) => {
   const cards = [
     {
       icon: <LayoutDashboard className="w-10 h-10 text-black" />,
@@ -237,7 +445,8 @@ const Expertise = () => {
           <motion.div 
             key={idx}
             whileHover={{ y: -10 }}
-            className="group p-10 bg-surface-container-low rounded-3xl brutal-border yellow-glow transition-all duration-300 flex flex-col justify-between aspect-square"
+            onClick={() => onAction(`Opening ${card.title} solutions...`)}
+            className="group p-10 bg-surface-container-low rounded-3xl brutal-border yellow-glow transition-all duration-300 flex flex-col justify-between aspect-square cursor-pointer"
           >
             <div className="bg-white w-16 h-16 flex items-center justify-center rounded-2xl brutal-border mb-8">
               {card.icon}
@@ -286,7 +495,7 @@ const Process = () => {
   );
 };
 
-const Pricing = () => {
+const Pricing = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
     <section className="py-32 bg-white px-6 lg:px-20" id="packages">
       <div className="text-center mb-20">
@@ -304,7 +513,12 @@ const Pricing = () => {
               <li className="flex items-center gap-3 text-sm font-bold"><CheckCircle2 className="w-5 h-5 text-secondary-accent" /> 2 Weeks Support</li>
             </ul>
           </div>
-          <button className="w-full py-5 rounded-full brutal-border font-black uppercase text-xs tracking-widest hover:bg-accent transition-all">Select Plan</button>
+          <button 
+            onClick={() => onAction("Starter plan selected. Redirecting to checkout...")}
+            className="w-full py-5 rounded-full brutal-border font-black uppercase text-xs tracking-widest hover:bg-accent transition-all"
+          >
+            Select Plan
+          </button>
         </div>
         {/* Growth */}
         <div className="p-12 bg-white rounded-3xl brutal-border border-2 border-black flex flex-col justify-between h-full relative scale-105 yellow-glow">
@@ -319,7 +533,12 @@ const Pricing = () => {
               <li className="flex items-center gap-3 text-sm font-bold"><CheckCircle2 className="w-5 h-5 text-secondary-accent" /> 1 Month Priority Support</li>
             </ul>
           </div>
-          <button className="w-full py-5 btn-gradient rounded-full text-white font-black uppercase text-xs tracking-widest hover:opacity-90 transition-all">Select Plan</button>
+          <button 
+            onClick={() => onAction("Growth plan selected. Redirecting to checkout...")}
+            className="w-full py-5 btn-gradient rounded-full text-white font-black uppercase text-xs tracking-widest hover:opacity-90 transition-all"
+          >
+            Select Plan
+          </button>
         </div>
         {/* Enterprise */}
         <div className="p-12 bg-white rounded-3xl brutal-border yellow-glow flex flex-col justify-between h-full">
@@ -328,14 +547,19 @@ const Pricing = () => {
             <div className="text-5xl font-black mb-10 tracking-tighter uppercase text-black">Custom</div>
             <p className="text-black/70 text-sm mb-12 font-bold leading-relaxed">Full-scale digital transformation including legacy migration and custom AI model training.</p>
           </div>
-          <button className="w-full py-5 rounded-full brutal-border font-black uppercase text-xs tracking-widest hover:bg-accent transition-all">Get Quote</button>
+          <button 
+            onClick={() => onAction("Enterprise inquiry sent. Our team will contact you.")}
+            className="w-full py-5 rounded-full brutal-border font-black uppercase text-xs tracking-widest hover:bg-accent transition-all"
+          >
+            Get Quote
+          </button>
         </div>
       </div>
     </section>
   );
 };
 
-const Portfolio = () => {
+const Portfolio = ({ onAction }: { onAction: (m: string) => void }) => {
   const projects = [
     {
       title: "NeXus Dashboard",
@@ -371,6 +595,7 @@ const Portfolio = () => {
           <motion.div 
             key={idx}
             whileHover="hover"
+            onClick={() => onAction(`Opening project: ${project.title}`)}
             className={`${project.span} group relative brutal-border cursor-pointer yellow-glow overflow-hidden`}
           >
             <motion.img 
@@ -428,7 +653,7 @@ const Testimonials = () => {
   );
 };
 
-const Careers = () => {
+const Careers = ({ onAction }: { onAction: (m: string) => void }) => {
   const benefits = [
     { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Healthy work-life balance" },
     { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "5 days work week*" },
@@ -468,7 +693,10 @@ const Careers = () => {
             <p className="text-on-surface-variant text-sm font-medium">Upload your resume and join the future.</p>
           </div>
           
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-6" onSubmit={(e) => {
+            e.preventDefault();
+            onAction("Application submitted successfully! We'll be in touch.");
+          }}>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Position Interested In</label>
               <select className="w-full bg-white brutal-border p-5 rounded-2xl focus:ring-4 focus:ring-accent/50 text-black appearance-none font-mono text-sm font-bold">
@@ -510,7 +738,7 @@ const Careers = () => {
   );
 };
 
-const Contact = () => {
+const Contact = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
     <section className="py-32 bg-surface-container-low px-6 lg:px-20" id="contact">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
@@ -545,13 +773,23 @@ const Contact = () => {
               referrerPolicy="no-referrer"
             />
           </div>
-          <a className="inline-flex items-center gap-4 px-10 py-5 bg-accent text-black brutal-border font-black uppercase text-xs tracking-widest yellow-glow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all" href="#">
+          <a 
+            className="inline-flex items-center gap-4 px-10 py-5 bg-accent text-black brutal-border font-black uppercase text-xs tracking-widest yellow-glow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all" 
+            href="#"
+            onClick={(e) => {
+              e.preventDefault();
+              onAction("Opening WhatsApp chat...");
+            }}
+          >
             <MessageSquare className="w-4 h-4" />
             WhatsApp Quote
           </a>
         </div>
         <div className="bg-white p-10 md:p-16 brutal-border yellow-glow">
-          <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+          <form className="space-y-8" onSubmit={(e) => {
+            e.preventDefault();
+            onAction("Message sent! Our team will respond shortly.");
+          }}>
             <div className="space-y-2">
               <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Full Name</label>
               <input className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black placeholder:text-black/30 font-mono text-sm font-bold" placeholder="John Doe" type="text"/>
@@ -592,24 +830,24 @@ const Contact = () => {
   );
 };
 
-const Footer = () => {
+const Footer = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
     <footer className="w-full pt-20 pb-10 bg-white flex flex-col items-center justify-center text-center px-10 border-t-4 border-black">
-      <div className="text-2xl font-black text-black mb-4 uppercase tracking-tighter bg-accent px-4 brutal-border">Zynapse Sys</div>
+      <div className="text-2xl font-black text-black mb-4 uppercase tracking-tighter bg-accent px-4 brutal-border cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Zynapse Sys</div>
       <div className="flex flex-wrap justify-center gap-10 mb-8 font-sans text-[10px] uppercase font-black tracking-[0.2em] text-black/40">
-        <a className="hover:text-black transition-all" href="#">Privacy Policy</a>
-        <a className="hover:text-black transition-all" href="#">Terms of Service</a>
-        <a className="hover:text-black transition-all" href="#">Expertise</a>
-        <a className="hover:text-black transition-all" href="#">Contact</a>
+        <a className="hover:text-black transition-all" href="#" onClick={(e) => { e.preventDefault(); onAction("Privacy Policy loading..."); }}>Privacy Policy</a>
+        <a className="hover:text-black transition-all" href="#" onClick={(e) => { e.preventDefault(); onAction("Terms of Service loading..."); }}>Terms of Service</a>
+        <a className="hover:text-black transition-all" href="#expertise">Expertise</a>
+        <a className="hover:text-black transition-all" href="#contact">Contact</a>
       </div>
       <div className="flex gap-6 mb-12">
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#">
+        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Sharing to LinkedIn..."); }}>
           <Share2 className="w-4 h-4 text-black" />
         </a>
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#">
+        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Opening global network..."); }}>
           <Globe className="w-4 h-4 text-black" />
         </a>
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#">
+        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Opening email client..."); }}>
           <AtSign className="w-4 h-4 text-black" />
         </a>
       </div>
@@ -623,21 +861,44 @@ const Footer = () => {
 };
 
 export default function App() {
+  const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
+
+  const showToast = (message: string) => {
+    setToast({ message, visible: true });
+    setTimeout(() => setToast({ message: "", visible: false }), 3000);
+  };
+
   return (
     <div className="min-h-screen selection:bg-accent selection:text-white">
-      <Navbar />
+      <Navbar onAction={showToast} />
       <main>
-        <Hero />
+        <Hero onAction={showToast} />
         <About />
-        <Expertise />
+        <ProductShowcase onAction={showToast} />
+        <Expertise onAction={showToast} />
         <Process />
-        <Pricing />
-        <Portfolio />
-        <Careers />
+        <Pricing onAction={showToast} />
+        <Portfolio onAction={showToast} />
+        <Careers onAction={showToast} />
         <Testimonials />
-        <Contact />
+        <Contact onAction={showToast} />
       </main>
-      <Footer />
+      <Footer onAction={showToast} />
+
+      {/* Global Toast Notification */}
+      <AnimatePresence>
+        {toast.visible && (
+          <motion.div
+            initial={{ opacity: 0, y: 50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            className="fixed bottom-10 left-1/2 -translate-x-1/2 z-[100] bg-black text-white px-8 py-4 rounded-full font-bold shadow-2xl brutal-border flex items-center gap-3"
+          >
+            <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+            {toast.message}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
