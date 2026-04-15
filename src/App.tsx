@@ -36,6 +36,7 @@ const Navbar = () => {
       </div>
       
       <div className="hidden md:flex gap-8 items-center font-sans text-[14px] font-bold">
+        <a href="#about" className="cursor-pointer hover:text-secondary-accent transition-colors">About</a>
         <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors">
           Company <ChevronDown className="w-4 h-4" />
         </div>
@@ -147,6 +148,57 @@ const Hero = () => {
           <button className="btn-gradient px-10 py-4 rounded-full font-bold text-lg shadow-xl shadow-secondary-accent/20">Get Started</button>
           <button className="bg-white brutal-border px-10 py-4 rounded-full font-bold text-lg hover:bg-surface-container-low transition-colors">Learn More</button>
         </motion.div>
+      </div>
+    </section>
+  );
+};
+
+const About = () => {
+  return (
+    <section className="py-32 bg-surface-container-low px-6 lg:px-20" id="about">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="relative">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            className="w-full aspect-square bg-accent rounded-[3rem] brutal-border yellow-glow flex items-center justify-center overflow-hidden"
+          >
+            <div className="text-center space-y-4">
+              <div className="text-8xl font-black text-black">5+</div>
+              <div className="text-sm font-black uppercase tracking-[0.4em] text-black">Years of Excellence</div>
+            </div>
+          </motion.div>
+          <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white rounded-full brutal-border flex items-center justify-center yellow-glow hidden md:flex">
+             <div className="text-center">
+                <div className="text-xs font-black uppercase tracking-widest text-black">Est.</div>
+                <div className="text-lg font-black text-black">2019</div>
+             </div>
+          </div>
+        </div>
+        
+        <div className="space-y-8">
+          <div className="space-y-4">
+            <h2 className="text-[12px] font-black tracking-[0.4em] uppercase text-black mb-4 bg-accent inline-block px-2 py-1 rounded-md">Our Story</h2>
+            <h3 className="text-5xl md:text-7xl font-black tracking-tighter text-black uppercase leading-tight">Founded on <br/><span className="text-gradient-ai">May 31st, 2019</span></h3>
+            <p className="text-xl text-on-surface-variant font-medium leading-relaxed">
+              Zynapse Sys was born from a vision to bridge the gap between technical complexity and editorial elegance. Since our inception in May 2019, we have been dedicated to crafting digital experiences that resonate.
+            </p>
+            <p className="text-lg text-on-surface-variant/80 font-medium leading-relaxed">
+              What started as a small team of passionate engineers has evolved into a powerhouse of digital craftsmanship, serving clients globally with cutting-edge SaaS architecture and AI-driven solutions.
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-8 pt-4">
+            <div>
+              <div className="text-4xl font-black text-black mb-2">100+</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Projects Delivered</div>
+            </div>
+            <div>
+              <div className="text-4xl font-black text-black mb-2">50+</div>
+              <div className="text-[10px] font-black uppercase tracking-[0.2em] text-on-surface-variant">Global Clients</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -576,6 +628,7 @@ export default function App() {
       <Navbar />
       <main>
         <Hero />
+        <About />
         <Expertise />
         <Process />
         <Pricing />
