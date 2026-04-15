@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="w-8 h-8 bg-gradient-to-br from-[#FF2D55] to-[#FF9500] rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
         </div>
-        <div className="text-xl font-black tracking-tighter text-on-surface uppercase">zynapse systems</div>
+        <div className="text-xl font-black tracking-tighter text-on-surface uppercase">Zynapse Sys</div>
       </div>
       
       <div className="hidden md:flex gap-8 items-center font-sans text-[14px] font-bold">
@@ -543,7 +543,7 @@ const Contact = () => {
 const Footer = () => {
   return (
     <footer className="w-full pt-20 pb-10 bg-white flex flex-col items-center justify-center text-center px-10 border-t-4 border-black">
-      <div className="text-2xl font-black text-black mb-4 uppercase tracking-tighter bg-accent px-4 brutal-border">zynapse systems</div>
+      <div className="text-2xl font-black text-black mb-4 uppercase tracking-tighter bg-accent px-4 brutal-border">Zynapse Sys</div>
       <div className="flex flex-wrap justify-center gap-10 mb-8 font-sans text-[10px] uppercase font-black tracking-[0.2em] text-black/40">
         <a className="hover:text-black transition-all" href="#">Privacy Policy</a>
         <a className="hover:text-black transition-all" href="#">Terms of Service</a>
@@ -565,7 +565,7 @@ const Footer = () => {
         <div className="w-4 h-4 bg-accent brutal-border"></div>
         <span className="text-[10px] uppercase tracking-[0.2em] font-black text-black">Ready for deployment</span>
       </div>
-      <p className="font-sans text-[10px] uppercase tracking-[0.1em] text-black/30 font-bold">© 2024 zynapse systems Editorial Intelligence. All rights reserved.</p>
+      <p className="font-sans text-[10px] uppercase tracking-[0.1em] text-black/30 font-bold">© 2024 Zynapse Sys Editorial Intelligence. All rights reserved.</p>
     </footer>
   );
 };
