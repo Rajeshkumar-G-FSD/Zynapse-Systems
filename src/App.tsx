@@ -210,19 +210,6 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         </motion.button>
       </div>
 
-      {/* Slide Counter - Bottom Center Anchor */}
-      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30">
-        <div className="flex items-center gap-4 bg-black/20 backdrop-blur-xl px-8 py-3 rounded-full border border-white/10">
-          <div className="text-white font-mono text-sm font-black tracking-widest">
-            {String(currentSlide + 1).padStart(2, '0')}
-          </div>
-          <div className="w-8 h-[1px] bg-white/20"></div>
-          <div className="text-white/40 font-mono text-sm font-black tracking-widest">
-            {String(slides.length).padStart(2, '0')}
-          </div>
-        </div>
-      </div>
-
       {/* Floating Contact Bubble */}
       <motion.div 
         whileHover={{ scale: 1.05, y: -5 }}
