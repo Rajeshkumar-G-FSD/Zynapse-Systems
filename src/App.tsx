@@ -31,7 +31,12 @@ import {
   Search,
   Palette,
   Megaphone,
-  ArrowRight
+  ArrowRight,
+  Phone,
+  Settings,
+  ClipboardCheck,
+  Rocket,
+  FileText
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -226,6 +231,123 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         <Mail className="w-6 h-6" />
         <span className="font-black uppercase tracking-[0.2em] text-[12px]">Contact us</span>
       </motion.div>
+    </section>
+  );
+};
+
+const Process = () => {
+  const steps = [
+    {
+      id: 1,
+      category: "START HERE",
+      title: "Free Consultation",
+      desc: "Tell us about your business and goals. We listen, understand, and recommend the right plan for you — zero pressure.",
+      icon: <Phone className="w-8 h-8" />
+    },
+    {
+      id: 2,
+      category: "PLANNING",
+      title: "Proposal & Approval",
+      desc: "We send a clear proposal with scope, timeline, and pricing. No surprises, no hidden costs — just full clarity before we begin.",
+      icon: <FileText className="w-8 h-8" />
+    },
+    {
+      id: 3,
+      category: "BUILDING",
+      title: "Design & Development",
+      desc: "Our team gets to work. You get regular updates and can give feedback at each milestone — no radio silence.",
+      icon: <Settings className="w-8 h-8" />
+    },
+    {
+      id: 4,
+      category: "GO LIVE",
+      title: "Review & Launch",
+      desc: "You review the final version, we make revisions until it's perfect, then launch your website with full confidence.",
+      icon: <ClipboardCheck className="w-8 h-8" />
+    },
+    {
+      id: 5,
+      category: "ALWAYS ON",
+      title: "Support & Growth",
+      desc: "We don't disappear after launch. Ongoing support, training, updates, and growth strategies keep your business thriving.",
+      icon: <Rocket className="w-8 h-8" />
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-[#F8FAFC] px-6 lg:px-20 overflow-hidden" id="process">
+      <div className="max-w-7xl mx-auto text-center mb-20">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-[#FF6B35] font-black tracking-[0.4em] uppercase text-xs mb-4"
+        >
+          How it Works
+        </motion.p>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-4xl md:text-6xl font-black text-[#1A2B56] mb-6"
+        >
+          Our Simple <span className="text-[#4169E1]">Process</span>
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-on-surface-variant font-medium max-w-2xl mx-auto leading-relaxed"
+        >
+          From your first call to launch day and beyond — a clear, stress-free journey at every step.
+        </motion.p>
+      </div>
+
+      <div className="max-w-7xl mx-auto relative px-4">
+        {/* Connection Line */}
+        <div className="absolute top-12 left-12 right-12 h-[2px] bg-[#FF6B35]/20 hidden lg:block" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+          {steps.map((step, i) => (
+            <motion.div
+              key={step.id}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="relative flex flex-col items-center"
+            >
+              {/* Numbered Circle and Icon Group */}
+              <div className="relative mb-12">
+                <div className="w-24 h-24 bg-[#FF6B35] rounded-full flex items-center justify-center text-white text-3xl font-black shadow-[0_10px_30px_rgba(255,107,53,0.3)] border-4 border-white z-10 relative">
+                  {step.id}
+                  <div className="absolute top-0 right-0 -translate-x-1 translate-y-2">
+                     <div className="w-6 h-6 bg-[#1A2B56] rounded-full flex items-center justify-center">
+                        <ArrowRight className="text-white w-3 h-3" />
+                     </div>
+                  </div>
+                </div>
+                
+                {/* Decoration under circle */}
+                <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[#1A2B56]/40">
+                  {step.icon}
+                </div>
+              </div>
+
+              {/* Step Card */}
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center w-full h-full">
+                <span className="text-[10px] font-black tracking-widest px-4 py-1 rounded-full mb-4 inline-block bg-[#FFF2ED] text-[#FF6B35]">
+                  {step.category}
+                </span>
+                <h3 className="text-xl font-black text-[#1A2B56] mb-4 leading-tight">{step.title}</h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  {step.desc}
+                </p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
@@ -746,39 +868,6 @@ const Expertise = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
-const Process = () => {
-  const steps = [
-    { id: "01", title: "Discovery", desc: "Deep dive into your brand's core DNA and user requirements." },
-    { id: "02", title: "Planning", desc: "Architecting the logic and strategic roadmap for development." },
-    { id: "03", title: "Design", desc: "Crafting high-fidelity editorial interfaces with precision." },
-    { id: "04", title: "Dev", desc: "Building with cutting-edge stack for speed and security." },
-    { id: "05", title: "Launch", desc: "Deploying excellence and scaling the impact globally." }
-  ];
-
-  return (
-    <section className="py-32 bg-surface-container-low px-6 lg:px-20 overflow-hidden" id="process">
-      <div className="text-center mb-24">
-        <h2 className="text-[12px] font-black tracking-[0.4em] uppercase text-black mb-4 bg-accent inline-block px-2 py-1 brutal-border">The Methodology</h2>
-        <h3 className="text-5xl md:text-8xl font-black text-black uppercase tracking-tighter">How We Build</h3>
-      </div>
-      <div className="relative">
-        <div className="hidden lg:block absolute top-1/2 left-0 w-full h-1 bg-black -translate-y-1/2 z-0"></div>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12 relative z-10">
-          {steps.map((step, idx) => (
-            <div key={idx} className="space-y-6 text-center lg:text-left">
-              <div className="w-16 h-16 bg-accent flex items-center justify-center mx-auto lg:mx-0 brutal-border yellow-glow">
-                <span className="text-black font-mono text-xl font-black">{step.id}</span>
-              </div>
-              <h5 className="text-xl font-black uppercase tracking-tight text-black">{step.title}</h5>
-              <p className="text-sm text-black/70 font-bold leading-relaxed">{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 const Pricing = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
     <section className="py-32 bg-white px-6 lg:px-20" id="packages">
@@ -1158,6 +1247,7 @@ export default function App() {
       <main>
         <Hero onAction={showToast} />
         <CoreServices onAction={showToast} />
+        <Process />
       </main>
       <Footer onAction={showToast} />
 
