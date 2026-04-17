@@ -182,43 +182,57 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         </AnimatePresence>
       </div>
 
-      {/* Navigation Arrows */}
-      <div className="absolute bottom-10 right-10 z-30 flex items-center gap-4">
-        <button 
+
+      {/* Navigation Arrows - Edge Placements */}
+      <div className="absolute inset-y-0 left-0 items-center hidden md:flex z-30 px-8">
+        <motion.button 
+          whileHover={{ x: 5, scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={prevSlide}
-          className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+          className="group flex flex-col items-center gap-6 text-white/30 hover:text-white transition-all"
         >
-          <ChevronLeft className="w-6 h-6" />
-        </button>
-        <button 
+          <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white transition-all bg-white/[0.03] backdrop-blur-sm">
+            <ChevronLeft className="w-8 h-8" />
+          </div>
+        </motion.button>
+      </div>
+
+      <div className="absolute inset-y-0 right-0 items-center hidden md:flex z-30 px-8">
+        <motion.button 
+          whileHover={{ x: -5, scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
           onClick={nextSlide}
-          className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+          className="group flex flex-col items-center gap-6 text-white/30 hover:text-white transition-all"
         >
-          <ChevronRight className="w-6 h-6" />
-        </button>
+          <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white transition-all bg-white/[0.03] backdrop-blur-sm">
+            <ChevronRight className="w-8 h-8" />
+          </div>
+        </motion.button>
+      </div>
+
+      {/* Slide Counter - Bottom Center Anchor */}
+      <div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30">
+        <div className="flex items-center gap-4 bg-black/20 backdrop-blur-xl px-8 py-3 rounded-full border border-white/10">
+          <div className="text-white font-mono text-sm font-black tracking-widest">
+            {String(currentSlide + 1).padStart(2, '0')}
+          </div>
+          <div className="w-8 h-[1px] bg-white/20"></div>
+          <div className="text-white/40 font-mono text-sm font-black tracking-widest">
+            {String(slides.length).padStart(2, '0')}
+          </div>
+        </div>
       </div>
 
       {/* Floating Contact Bubble */}
       <motion.div 
-        whileHover={{ scale: 1.05 }}
+        whileHover={{ scale: 1.05, y: -5 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => onAction("Opening contact form...")}
-        className="fixed bottom-6 right-6 z-50 bg-[#FF0000] text-white px-6 py-4 rounded-xl flex items-center gap-3 shadow-2xl cursor-pointer hover:bg-[#CC0000] transition-colors"
+        className="fixed bottom-8 right-8 z-50 bg-[#FF0000] text-white px-8 py-5 rounded-2xl flex items-center gap-3 shadow-[0_20px_50px_rgba(255,0,0,0.3)] cursor-pointer hover:bg-[#CC0000] transition-all brutal-border border-white/20"
       >
         <Mail className="w-6 h-6" />
-        <span className="font-bold uppercase tracking-widest text-sm">Contact us</span>
+        <span className="font-black uppercase tracking-[0.2em] text-[12px]">Contact us</span>
       </motion.div>
-
-      {/* Slide Indicators */}
-      <div className="absolute bottom-10 left-10 z-30 flex gap-2">
-        {slides.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => setCurrentSlide(i)}
-            className={`h-1 rounded-full transition-all duration-500 ${i === currentSlide ? 'w-8 bg-white' : 'w-4 bg-white/30'}`}
-          />
-        ))}
-      </div>
     </section>
   );
 };
