@@ -25,7 +25,13 @@ import {
   BarChart3,
   Monitor,
   Users,
-  Code2
+  Code2,
+  ShoppingCart,
+  Smartphone,
+  Search,
+  Palette,
+  Megaphone,
+  ArrowRight
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -220,6 +226,208 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         <Mail className="w-6 h-6" />
         <span className="font-black uppercase tracking-[0.2em] text-[12px]">Contact us</span>
       </motion.div>
+    </section>
+  );
+};
+
+const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
+  const services = [
+    {
+      id: "01",
+      title: "Website Development",
+      category: "MOST POPULAR",
+      desc: "Fast, mobile-first websites that represent your brand and convert visitors into customers. WordPress, custom HTML & more.",
+      features: ["Responsive Mobile Design", "WordPress / Custom Build", "SEO-Optimized Structure", "Fast Loading Speed", "1 Year Free Support"],
+      icon: <Globe className="w-10 h-10" />,
+      theme: "blue",
+      cta: "Get Started"
+    },
+    {
+      id: "02",
+      title: "Online Store Development",
+      category: "E-COMMERCE",
+      desc: "Powerful WooCommerce & Shopify stores with payment integration, product management, and order tracking.",
+      features: ["WooCommerce / Shopify", "Razorpay & Paytm Integration", "Product Catalogue Setup", "Inventory Management", "GST Invoice Automation"],
+      icon: <ShoppingCart className="w-10 h-10" />,
+      theme: "light",
+      cta: "Explore"
+    },
+    {
+      id: "03",
+      title: "Digital Marketing",
+      category: "MARKETING",
+      desc: "Meta Ads, Google Ads, and SEO strategies that bring real leads and measurable ROI for your business.",
+      features: ["Meta & Google Ads", "SEO & Local Rankings", "Lead Generation Campaigns", "Monthly Reports", "ROI-Focused Strategy"],
+      icon: <Megaphone className="w-10 h-10" />,
+      theme: "light",
+      cta: "Explore"
+    },
+    {
+      id: "04",
+      title: "Social Media Management",
+      category: "SOCIAL MEDIA",
+      desc: "Content creation, Reels, and posting calendars that build your brand's authority on Instagram & Facebook.",
+      features: ["Instagram & Facebook", "Reels & Graphic Design", "Content Calendar", "Engagement Management", "Monthly Analytics"],
+      icon: <Smartphone className="w-10 h-10" />,
+      theme: "light",
+      cta: "Explore"
+    },
+    {
+      id: "05",
+      title: "SEO & Google Ranking",
+      category: "SEO",
+      desc: "Get your business to Google Page 1. Local SEO, GMB optimization, and backlink building for Tamil Nadu markets.",
+      features: ["Google My Business Setup", "Local SEO Optimization", "On-Page & Off-Page SEO", "Keyword Research", "Monthly Ranking Reports"],
+      icon: <Search className="w-10 h-10" />,
+      theme: "light",
+      cta: "Explore"
+    },
+    {
+      id: "06",
+      title: "Graphic & Brand Design",
+      category: "DESIGN",
+      desc: "Logo design, brand identity kits, and marketing creatives that make your business look professional and memorable.",
+      features: ["Logo & Brand Identity", "Business Card & Flyer", "Social Media Templates", "Brochure Design", "Brand Style Guide"],
+      icon: <Palette className="w-10 h-10" />,
+      theme: "light",
+      cta: "Explore"
+    }
+  ];
+
+  return (
+    <section className="py-24 bg-white px-6 lg:px-20 overflow-hidden" id="services">
+      <div className="max-w-7xl mx-auto text-center mb-16">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-[#FF6B35] font-black tracking-[0.4em] uppercase text-xs mb-4"
+        >
+          What We Offer
+        </motion.p>
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="text-4xl md:text-5xl font-black text-[#1A2B56] mb-6"
+        >
+          Our <span className="text-[#4169E1]">Core Services</span>
+        </motion.h2>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-on-surface-variant font-medium max-w-2xl mx-auto"
+        >
+          From building your first website to scaling your e-commerce store — we cover the full digital spectrum for Tamil Nadu businesses.
+        </motion.p>
+      </div>
+
+      <div className="max-w-7xl mx-auto space-y-8">
+        {/* Top Row: Slide from Left */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.slice(0, 3).map((s, i) => (
+            <motion.div
+              key={s.id}
+              initial={{ opacity: 0, x: -100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
+              className={`relative p-8 rounded-[2rem] border transition-all hover:shadow-2xl ${
+                s.theme === 'blue' 
+                  ? 'bg-[#1A2B56] text-white border-transparent' 
+                  : 'bg-[#F8FAFC] border-slate-100 text-slate-900 hover:bg-white'
+              }`}
+            >
+              <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${
+                s.theme === 'blue' ? 'bg-white/10' : 'bg-blue-50 text-blue-600'
+              }`}>
+                {s.icon}
+              </div>
+              <span className={`text-[10px] font-black tracking-widest px-3 py-1 rounded-md mb-4 inline-block ${
+                s.theme === 'blue' ? 'bg-[#FF6B35] text-white' : 'bg-[#FFF2ED] text-[#FF6B35]'
+              }`}>
+                {s.category}
+              </span>
+              <h3 className="text-2xl font-black mb-4 leading-tight">{s.title}</h3>
+              <p className={`text-sm mb-8 leading-relaxed font-medium ${
+                s.theme === 'blue' ? 'text-white/80' : 'text-slate-500'
+              }`}>
+                {s.desc}
+              </p>
+              
+              <ul className="space-y-3 mb-10">
+                {s.features.map((f, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-sm font-bold">
+                    <CheckCircle2 className={`w-4 h-4 ${s.theme === 'blue' ? 'text-[#FF6B35]' : 'text-[#FF6B35]'}`} />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={() => onAction(`Inquiry sent for ${s.title}`)}
+                className={`inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest ${
+                s.theme === 'blue' ? 'text-white' : 'text-blue-600'
+              }`}>
+                {s.cta} <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <div className={`absolute bottom-6 right-8 text-7xl font-black opacity-5 pointer-events-none ${
+                s.theme === 'blue' ? 'text-white' : 'text-slate-900'
+              }`}>
+                {s.id}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Bottom Row: Slide from Right */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {services.slice(3, 6).map((s, i) => (
+            <motion.div
+              key={s.id}
+              initial={{ opacity: 0, x: 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1, duration: 0.6, ease: "easeOut" }}
+              className="relative p-8 rounded-[2rem] border border-slate-100 bg-[#F8FAFC] text-slate-900 hover:bg-white hover:shadow-2xl transition-all"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
+                {s.icon}
+              </div>
+              <span className="text-[10px] font-black tracking-widest px-3 py-1 rounded-md mb-4 inline-block bg-[#FFF2ED] text-[#FF6B35]">
+                {s.category}
+              </span>
+              <h3 className="text-2xl font-black mb-4 leading-tight">{s.title}</h3>
+              <p className="text-sm mb-8 leading-relaxed font-medium text-slate-500">
+                {s.desc}
+              </p>
+              
+              <ul className="space-y-3 mb-10">
+                {s.features.map((f, idx) => (
+                  <li key={idx} className="flex items-center gap-3 text-sm font-bold">
+                    <CheckCircle2 className="w-4 h-4 text-[#FF6B35]" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+
+              <button 
+                onClick={() => onAction(`Inquiry sent for ${s.title}`)}
+                className="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-blue-600">
+                {s.cta} <ArrowRight className="w-4 h-4" />
+              </button>
+
+              <div className="absolute bottom-6 right-8 text-7xl font-black opacity-5 pointer-events-none text-slate-900">
+                {s.id}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };
@@ -949,6 +1157,7 @@ export default function App() {
       <Navbar onAction={showToast} />
       <main>
         <Hero onAction={showToast} />
+        <CoreServices onAction={showToast} />
       </main>
       <Footer onAction={showToast} />
 
