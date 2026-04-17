@@ -17,8 +17,8 @@
   --color-primary-container: #1A1A1A;
   --color-on-primary: #FFFFFF;
   
-  --color-accent: #FFD700;
-  --color-secondary-accent: #FF3E00;
+  --color-accent: #3ACBB1;
+  --color-secondary-accent: #1A2B56;
   
   --color-on-surface: #1A1A1A;
   --color-on-surface-variant: #666666;
@@ -43,13 +43,13 @@
 }
 
 .text-gradient-ai {
-  background: linear-gradient(to right, #FF2D55, #FF9500);
+  background: linear-gradient(to right, #3ACBB1, #1A2B56);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .btn-gradient {
-  background: linear-gradient(to right, #FF2D55, #FF9500);
+  background: linear-gradient(to right, #3ACBB1, #1A2B56);
   color: white;
 }
 
@@ -70,5 +70,5 @@
 }
 
 .yellow-glow {
-  box-shadow: 0 10px 30px -10px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(58, 203, 177, 0.3);
 }

@@ -36,28 +36,56 @@ import {
   Settings,
   ClipboardCheck,
   Rocket,
-  FileText
+  FileText,
+  Clock,
+  MessageCircle
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-const Navbar = ({ onAction }: { onAction: (m: string) => void }) => {
+const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string }) => {
   return (
     <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline px-8 py-4 flex justify-between items-center max-w-full">
-      <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-        <div className="w-8 h-8 bg-gradient-to-br from-[#FF2D55] to-[#FF9500] rounded-lg flex items-center justify-center">
+      <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView("main")}>
+        <div className="w-8 h-8 bg-gradient-to-br from-[#3ACBB1] to-[#1A2B56] rounded-lg flex items-center justify-center">
           <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
         </div>
         <div className="text-xl font-black tracking-tighter text-on-surface uppercase">Zynapse Sys</div>
       </div>
 
-      <motion.button 
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => onAction("Redirecting to onboarding...")}
-        className="btn-gradient px-8 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-secondary-accent/20"
-      >
-        Join Us
-      </motion.button>
+      <div className="flex items-center gap-8">
+        <button 
+          onClick={() => { setView("main"); setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
+        >
+          Expertise
+        </button>
+        <button 
+          onClick={() => { setView("main"); setTimeout(() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
+        >
+          Process
+        </button>
+        <button 
+          onClick={() => setView("journey")}
+          className={`text-sm font-black uppercase tracking-[0.2em] transition-colors ${currentView === 'journey' ? 'text-[#3ACBB1]' : 'text-on-surface hover:text-[#3ACBB1]'}`}
+        >
+          How it Works
+        </button>
+        <button 
+          onClick={() => { setView("main"); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
+          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
+        >
+          Contact
+        </button>
+        <motion.button 
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onAction("Redirecting to onboarding...")}
+          className="btn-gradient px-8 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-[#3ACBB1]/20"
+        >
+          Join Us
+        </motion.button>
+      </div>
     </nav>
   );
 };
@@ -172,7 +200,7 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => onAction("Redirecting to information page...")}
-                className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-10 py-4 font-bold text-lg transition-colors uppercase tracking-wider"
+                className="bg-[#3ACBB1] hover:bg-[#2CA08A] text-white px-10 py-4 font-bold text-lg transition-colors uppercase tracking-wider"
               >
                 {slide.button}
               </motion.button>
@@ -226,7 +254,7 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         whileHover={{ scale: 1.05, y: -5 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => onAction("Opening contact form...")}
-        className="fixed bottom-8 right-8 z-50 bg-[#FF0000] text-white px-8 py-5 rounded-2xl flex items-center gap-3 shadow-[0_20px_50px_rgba(255,0,0,0.3)] cursor-pointer hover:bg-[#CC0000] transition-all brutal-border border-white/20"
+        className="fixed bottom-8 right-8 z-50 bg-[#3ACBB1] text-white px-8 py-5 rounded-2xl flex items-center gap-3 shadow-[0_20px_50px_rgba(58,203,177,0.3)] cursor-pointer hover:bg-[#2CA08A] transition-all brutal-border border-white/20"
       >
         <Mail className="w-6 h-6" />
         <span className="font-black uppercase tracking-[0.2em] text-[12px]">Contact us</span>
@@ -239,37 +267,58 @@ const Process = () => {
   const steps = [
     {
       id: 1,
+      category: "DISCOVERY",
+      title: "Market Research",
+      desc: "We analyze your competition and industry trends to find your unique edge in the digital landscape.",
+      icon: <Search className="w-8 h-8" />
+    },
+    {
+      id: 2,
       category: "START HERE",
       title: "Free Consultation",
       desc: "Tell us about your business and goals. We listen, understand, and recommend the right plan for you — zero pressure.",
       icon: <Phone className="w-8 h-8" />
     },
     {
-      id: 2,
-      category: "PLANNING",
-      title: "Proposal & Approval",
-      desc: "We send a clear proposal with scope, timeline, and pricing. No surprises, no hidden costs — just full clarity before we begin.",
-      icon: <FileText className="w-8 h-8" />
-    },
-    {
       id: 3,
-      category: "BUILDING",
-      title: "Design & Development",
-      desc: "Our team gets to work. You get regular updates and can give feedback at each milestone — no radio silence.",
-      icon: <Settings className="w-8 h-8" />
+      category: "PLANNING",
+      title: "Strategic Roadmap",
+      desc: "We define the user journey, tech stack, and project architecture to ensure a solid foundation for growth.",
+      icon: <LayoutDashboard className="w-8 h-8" />
     },
     {
       id: 4,
-      category: "GO LIVE",
-      title: "Review & Launch",
-      desc: "You review the final version, we make revisions until it's perfect, then launch your website with full confidence.",
-      icon: <ClipboardCheck className="w-8 h-8" />
+      category: "AGREEMENT",
+      title: "Proposal & Approval",
+      desc: "We send a clear proposal with scope, timeline, and pricing. Just full clarity before we begin.",
+      icon: <FileText className="w-8 h-8" />
     },
     {
       id: 5,
+      category: "CREATIVE",
+      title: "Design & Wireframing",
+      desc: "Our designers craft a bespoke UI that aligns with your brand identity and ensures a premium user experience.",
+      icon: <Palette className="w-8 h-8" />
+    },
+    {
+      id: 6,
+      category: "BUILDING",
+      title: "Code Development",
+      desc: "Our engineers bring the designs to life with clean, scalable code and high-performance server architecture.",
+      icon: <Code2 className="w-8 h-8" />
+    },
+    {
+      id: 7,
+      category: "GO LIVE",
+      title: "Review & Testing",
+      desc: "You review the final version, we perform rigorous QA, and then launch your website with full confidence.",
+      icon: <ClipboardCheck className="w-8 h-8" />
+    },
+    {
+      id: 8,
       category: "ALWAYS ON",
       title: "Support & Growth",
-      desc: "We don't disappear after launch. Ongoing support, training, updates, and growth strategies keep your business thriving.",
+      desc: "Ongoing support, training, and growth strategies keep your business thriving in the digital economy.",
       icon: <Rocket className="w-8 h-8" />
     }
   ];
@@ -281,7 +330,7 @@ const Process = () => {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-[#FF6B35] font-black tracking-[0.4em] uppercase text-xs mb-4"
+          className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs mb-4"
         >
           How it Works
         </motion.p>
@@ -291,7 +340,7 @@ const Process = () => {
           viewport={{ once: true }}
           className="text-4xl md:text-6xl font-black text-[#1A2B56] mb-6"
         >
-          Our Simple <span className="text-[#4169E1]">Process</span>
+          Our Simple <span className="text-[#3ACBB1]">Process</span>
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -299,15 +348,15 @@ const Process = () => {
           viewport={{ once: true }}
           className="text-on-surface-variant font-medium max-w-2xl mx-auto leading-relaxed"
         >
-          From your first call to launch day and beyond — a clear, stress-free journey at every step.
+          A more comprehensive, 8-step journey designed to take your business from concept to market leader.
         </motion.p>
       </div>
 
       <div className="max-w-7xl mx-auto relative px-4">
-        {/* Connection Line */}
-        <div className="absolute top-12 left-12 right-12 h-[2px] bg-[#FF6B35]/20 hidden lg:block" />
+        {/* Connection Line - Row 1 */}
+        <div className="absolute top-12 left-12 right-12 h-[2px] bg-[#3ACBB1]/20 hidden lg:block" />
         
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
           {steps.map((step, i) => (
             <motion.div
               key={step.id}
@@ -319,7 +368,7 @@ const Process = () => {
             >
               {/* Numbered Circle and Icon Group */}
               <div className="relative mb-12">
-                <div className="w-24 h-24 bg-[#FF6B35] rounded-full flex items-center justify-center text-white text-3xl font-black shadow-[0_10px_30px_rgba(255,107,53,0.3)] border-4 border-white z-10 relative">
+                <div className="w-24 h-24 bg-[#3ACBB1] rounded-full flex items-center justify-center text-white text-3xl font-black shadow-[0_10px_30px_rgba(58,203,177,0.3)] border-4 border-white z-10 relative">
                   {step.id}
                   <div className="absolute top-0 right-0 -translate-x-1 translate-y-2">
                      <div className="w-6 h-6 bg-[#1A2B56] rounded-full flex items-center justify-center">
@@ -335,8 +384,8 @@ const Process = () => {
               </div>
 
               {/* Step Card */}
-              <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center w-full h-full">
-                <span className="text-[10px] font-black tracking-widest px-4 py-1 rounded-full mb-4 inline-block bg-[#FFF2ED] text-[#FF6B35]">
+              <div className="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center w-full h-full hover:border-[#3ACBB1]/30 transition-colors">
+                <span className="text-[10px] font-black tracking-widest px-4 py-1 rounded-full mb-4 inline-block bg-[#E6FFFA] text-[#3ACBB1]">
                   {step.category}
                 </span>
                 <h3 className="text-xl font-black text-[#1A2B56] mb-4 leading-tight">{step.title}</h3>
@@ -423,7 +472,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-[#FF6B35] font-black tracking-[0.4em] uppercase text-xs mb-4"
+          className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs mb-4"
         >
           What We Offer
         </motion.p>
@@ -434,7 +483,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
           transition={{ delay: 0.1 }}
           className="text-4xl md:text-5xl font-black text-[#1A2B56] mb-6"
         >
-          Our <span className="text-[#4169E1]">Core Services</span>
+          Our <span className="text-[#3ACBB1]">Core Services</span>
         </motion.h2>
         <motion.p 
           initial={{ opacity: 0, y: 20 }}
@@ -469,7 +518,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
                 {s.icon}
               </div>
               <span className={`text-[10px] font-black tracking-widest px-3 py-1 rounded-md mb-4 inline-block ${
-                s.theme === 'blue' ? 'bg-[#FF6B35] text-white' : 'bg-[#FFF2ED] text-[#FF6B35]'
+                s.theme === 'blue' ? 'bg-[#3ACBB1] text-white' : 'bg-[#E6FFFA] text-[#3ACBB1]'
               }`}>
                 {s.category}
               </span>
@@ -483,7 +532,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
               <ul className="space-y-3 mb-10">
                 {s.features.map((f, idx) => (
                   <li key={idx} className="flex items-center gap-3 text-sm font-bold">
-                    <CheckCircle2 className={`w-4 h-4 ${s.theme === 'blue' ? 'text-[#FF6B35]' : 'text-[#FF6B35]'}`} />
+                    <CheckCircle2 className={`w-4 h-4 ${s.theme === 'blue' ? 'text-[#3ACBB1]' : 'text-[#3ACBB1]'}`} />
                     {f}
                   </li>
                 ))}
@@ -520,7 +569,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
               <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-6">
                 {s.icon}
               </div>
-              <span className="text-[10px] font-black tracking-widest px-3 py-1 rounded-md mb-4 inline-block bg-[#FFF2ED] text-[#FF6B35]">
+              <span className="text-[10px] font-black tracking-widest px-3 py-1 rounded-md mb-4 inline-block bg-[#E6FFFA] text-[#3ACBB1]">
                 {s.category}
               </span>
               <h3 className="text-2xl font-black mb-4 leading-tight">{s.title}</h3>
@@ -531,7 +580,7 @@ const CoreServices = ({ onAction }: { onAction: (m: string) => void }) => {
               <ul className="space-y-3 mb-10">
                 {s.features.map((f, idx) => (
                   <li key={idx} className="flex items-center gap-3 text-sm font-bold">
-                    <CheckCircle2 className="w-4 h-4 text-[#FF6B35]" />
+                    <CheckCircle2 className="w-4 h-4 text-[#3ACBB1]" />
                     {f}
                   </li>
                 ))}
@@ -612,7 +661,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       title: "Real Estate Solutions",
       subtitle: "Find Your Dream Home",
       description: "Search from over 10,000+ properties for sale and rent.",
-      accent: "#FF9500",
+      accent: "#3ACBB1",
       categories: ["Buy", "Rent", "Sell"],
       heroImage: "https://i.postimg.cc/PxQyjGKG/Modern-real-estate-search-on-devices.png",
       items: [
@@ -640,7 +689,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       title: "Food & Logistics",
       subtitle: "Gourmet at Your Door",
       description: "Discover the best cuisines from top-rated local restaurants.",
-      accent: "#FF2D55",
+      accent: "#059669",
       categories: ["Pizza", "Burgers", "Sushi", "Desserts"],
       heroImage: "https://i.postimg.cc/DZbVQD7F/Zynapse-food-delivery-app-mockup.png",
       items: [
@@ -682,7 +731,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       title: "E-Commerce Experience",
       subtitle: "Seamless Digital Retail",
       description: "Building next-generation retail experiences with integrated AI and AR.",
-      accent: "#FF2D55",
+      accent: "#3ACBB1",
       categories: ["Fashion", "Tech", "Home", "Beauty"],
       heroImage: "https://i.postimg.cc/Hn7N5741/E-commerce-website-mockup-for-Zynapse.png",
       items: [
@@ -1203,38 +1252,641 @@ const Contact = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
-const Footer = ({ onAction }: { onAction: (m: string) => void }) => {
+const Footer = ({ onAction, setView }: { onAction: (m: string) => void, setView?: (v: any) => void }) => {
   return (
-    <footer className="w-full pt-20 pb-10 bg-white flex flex-col items-center justify-center text-center px-10 border-t-4 border-black">
-      <div className="text-2xl font-black text-black mb-4 uppercase tracking-tighter bg-accent px-4 brutal-border cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Zynapse Sys</div>
-      <div className="flex flex-wrap justify-center gap-10 mb-8 font-sans text-[10px] uppercase font-black tracking-[0.2em] text-black/40">
-        <a className="hover:text-black transition-all" href="#" onClick={(e) => { e.preventDefault(); onAction("Privacy Policy loading..."); }}>Privacy Policy</a>
-        <a className="hover:text-black transition-all" href="#" onClick={(e) => { e.preventDefault(); onAction("Terms of Service loading..."); }}>Terms of Service</a>
-        <a className="hover:text-black transition-all" href="#expertise">Expertise</a>
-        <a className="hover:text-black transition-all" href="#contact">Contact</a>
+    <footer className="w-full bg-[#030712] pt-24 pb-12 px-6 lg:px-20 relative overflow-hidden">
+      {/* Grid Pattern Background */}
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} 
+      />
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 mb-24">
+          
+          {/* Column 1: Design Services */}
+          <div>
+            <div className="flex items-center gap-3 mb-10">
+              <div className="w-6 h-[2px] bg-[#3B82F6]" />
+              <h3 className="text-[#3B82F6] text-xs font-black tracking-[0.2em] uppercase">Design Services</h3>
+            </div>
+            <ul className="space-y-6">
+              {[
+                { name: "Web Designing", section: "services" },
+                { name: "Web Development", section: "services" },
+                { name: "Logo / Graphic Design", section: "services" },
+                { name: "Ecommerce Website Development", section: "services" }
+              ].map((item, i) => (
+                <li key={i}>
+                  <a 
+                    href="#" 
+                    onClick={(e) => { 
+                      e.preventDefault(); 
+                      if (setView) {
+                        setView("main");
+                        setTimeout(() => document.getElementById(item.section)?.scrollIntoView({ behavior: 'smooth' }), 100);
+                      }
+                    }}
+                    className="text-slate-400 hover:text-white transition-colors text-sm font-medium"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 2: Digital Marketing & Policies */}
+          <div>
+            <div className="flex items-center gap-3 mb-10">
+              <div className="w-6 h-[2px] bg-[#3B82F6]" />
+              <h3 className="text-[#3B82F6] text-xs font-black tracking-[0.2em] uppercase">Services & Policies</h3>
+            </div>
+            <ul className="space-y-6">
+              {[
+                { name: "Search Engine Optimization", type: "scroll", target: "services" },
+                { name: "Social Media Marketing", type: "scroll", target: "services" },
+                { name: "Our Process", type: "scroll", target: "process" },
+                { name: "How it Works", type: "view", target: "journey" },
+                { name: "Refund Policy", type: "view", target: "refund" },
+                { name: "Privacy Policy", type: "view", target: "privacy" }
+              ].map((item, i) => (
+                <li key={i}>
+                  <a 
+                    href="#" 
+                    onClick={(e) => { 
+                      e.preventDefault(); 
+                      if (setView) {
+                        if (item.type === 'view') setView(item.target);
+                        else {
+                          setView("main");
+                          setTimeout(() => document.getElementById(item.target)?.scrollIntoView({ behavior: 'smooth' }), 100);
+                        }
+                      }
+                    }}
+                    className="text-slate-400 hover:text-white transition-colors text-sm font-medium"
+                  >
+                    {item.name}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Column 3: Contact Us */}
+          <div>
+            <div className="flex items-center gap-3 mb-10">
+              <div className="w-6 h-[2px] bg-[#3B82F6]" />
+              <h3 className="text-[#3B82F6] text-xs font-black tracking-[0.2em] uppercase">Contact Us</h3>
+            </div>
+            
+            <div className="space-y-8">
+              {/* Address */}
+              <div className="flex gap-5">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
+                  <MapPin className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Address</p>
+                  <p className="text-slate-300 text-sm leading-relaxed">
+                    Coimbatore & Erode, Tamil Nadu
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex gap-5">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
+                  <Phone className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Phone</p>
+                  <p className="text-slate-300 text-sm font-bold">+91 8072117912</p>
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex gap-5">
+                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Email</p>
+                  <p className="text-slate-300 text-sm font-bold">zynapse@gmail.com</p>
+                </div>
+              </div>
+
+              {/* Schedule Widget */}
+              <div className="mt-12 bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 text-sm font-medium">Mon – Sat</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-white font-bold text-sm tracking-tight">9 AM – 6 PM</span>
+                    <span className="px-3 py-1 bg-[#10B981]/20 text-[#10B981] text-[10px] font-black rounded-lg">OPEN</span>
+                  </div>
+                </div>
+                <div className="h-[1px] bg-white/5" />
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 text-sm font-medium">Sunday</span>
+                  <div className="flex items-center gap-4">
+                    <span className="text-white font-bold text-sm tracking-tight">Closed</span>
+                    <span className="px-3 py-1 bg-red-500/20 text-red-500 text-[10px] font-black rounded-lg">HOLIDAY</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+            <div className="w-8 h-8 bg-gradient-to-br from-[#3ACBB1] to-[#1A2B56] rounded-lg flex items-center justify-center">
+              <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
+            </div>
+            <div className="text-xl font-black tracking-tighter text-white uppercase italic">Zynapse</div>
+          </div>
+          <p className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">
+            © 2024 Zynapse Sys. All rights reserved. Professional IT Fortress.
+          </p>
+          <div className="flex gap-6">
+            <Share2 className="w-4 h-4 text-slate-600 hover:text-white cursor-pointer transition-colors" />
+            <Globe className="w-4 h-4 text-slate-600 hover:text-white cursor-pointer transition-colors" />
+            <AtSign className="w-4 h-4 text-slate-600 hover:text-white cursor-pointer transition-colors" />
+          </div>
+        </div>
       </div>
-      <div className="flex gap-6 mb-12">
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Sharing to LinkedIn..."); }}>
-          <Share2 className="w-4 h-4 text-black" />
-        </a>
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Opening global network..."); }}>
-          <Globe className="w-4 h-4 text-black" />
-        </a>
-        <a className="w-12 h-12 bg-white brutal-border flex items-center justify-center hover:bg-accent transition-colors yellow-glow" href="#" onClick={(e) => { e.preventDefault(); onAction("Opening email client..."); }}>
-          <AtSign className="w-4 h-4 text-black" />
-        </a>
-      </div>
-      <div className="flex items-center gap-4 mb-4">
-        <div className="w-4 h-4 bg-accent brutal-border"></div>
-        <span className="text-[10px] uppercase tracking-[0.2em] font-black text-black">Ready for deployment</span>
-      </div>
-      <p className="font-sans text-[10px] uppercase tracking-[0.1em] text-black/30 font-bold">© 2024 Zynapse Sys Editorial Intelligence. All rights reserved.</p>
     </footer>
   );
 };
 
+const ProcessJourneyView = () => {
+  const steps = [
+    {
+      id: 1,
+      title: "Market Research",
+      desc: "We analyze your competition and industry trends to find your unique edge in the digital landscape.",
+    },
+    {
+      id: 2,
+      title: "Free Consultation",
+      desc: "Tell us about your business and goals. We listen, understand, and recommend the right plan for you — zero pressure."
+    },
+    {
+      id: 3,
+      title: "Strategic Roadmap",
+      desc: "We define the user journey, tech stack, and project architecture to ensure a solid foundation for growth."
+    },
+    {
+      id: 4,
+      title: "Proposal & Approval",
+      desc: "We send a clear proposal with scope, timeline, and pricing. Just full clarity before we begin."
+    },
+    {
+      id: 5,
+      title: "Design & Wireframing",
+      desc: "Our designers craft a bespoke UI that aligns with your brand identity and ensures a premium user experience."
+    },
+    {
+      id: 6,
+      title: "Code Development",
+      desc: "Our engineers bring the designs to life with clean, scalable code and high-performance server architecture."
+    },
+    {
+      id: 7,
+      title: "Review & Testing",
+      desc: "You review the final version, we perform rigorous QA, and then launch your website with full confidence."
+    },
+    {
+      id: 8,
+      title: "Support & Growth",
+      desc: "Ongoing support, training, and growth strategies keep your business thriving in the digital economy."
+    }
+  ];
+
+  return (
+    <section className="pt-40 pb-32 bg-white px-6 lg:px-20 min-h-screen">
+      <div className="max-w-4xl mx-auto text-center mb-24">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs mb-6"
+        >
+          How it Works
+        </motion.p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-6xl md:text-8xl font-black text-[#1A2B56] mb-8 tracking-tighter"
+        >
+          THE <span className="text-[#3ACBB1]">8-STEP</span> JOURNEY
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="text-2xl text-slate-500 font-medium leading-relaxed"
+        >
+          A more comprehensive, 8-step journey designed to take your business from concept to market leader.
+        </motion.p>
+      </div>
+
+      <div className="max-w-4xl mx-auto space-y-12">
+        {steps.map((step, i) => (
+          <motion.div
+            key={step.id}
+            initial={{ opacity: 0, x: i % 2 === 0 ? -50 : 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="flex items-center gap-8 md:gap-12"
+          >
+            <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#3ACBB1] flex items-center justify-center text-[#3ACBB1] text-2xl font-black shadow-[0_10px_30px_rgba(58,203,177,0.1)]">
+              {step.id}
+            </div>
+            
+            <div className="flex-grow p-8 md:p-12 rounded-[2.5rem] border-2 border-[#3ACBB1]/20 bg-white shadow-xl shadow-slate-100/50 hover:border-[#3ACBB1] transition-all duration-500 group">
+              <h3 className="text-2xl md:text-3xl font-black text-[#1A2B56] mb-4 group-hover:text-[#3ACBB1] transition-colors">
+                {step.title}
+              </h3>
+              <p className="text-lg text-slate-500 font-medium leading-relaxed">
+                {step.desc}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const ReadyToGrow = ({ onAction }: { onAction: (m: string) => void }) => {
+  return (
+    <section className="py-24 bg-[#1A2B56] text-white overflow-hidden relative" id="contact">
+      {/* Background patterns */}
+      <div className="absolute inset-0 opacity-10 pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-[#3ACBB1] rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3ACBB1] rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
+        {/* Badge */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 mb-10"
+        >
+          <div className="w-2 h-2 rounded-full bg-[#3ACBB1] animate-pulse" />
+          <span className="text-[10px] font-black tracking-[0.3em] uppercase">Free Consultation Available</span>
+        </motion.div>
+
+        {/* Heading */}
+        <motion.h2 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+          className="text-5xl md:text-7xl font-black mb-6 leading-tight"
+        >
+          Ready to Grow Your <br />
+          <span className="text-[#3ACBB1]">Business Online?</span>
+        </motion.h2>
+
+        {/* Subheading */}
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.2 }}
+          className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 font-medium"
+        >
+          Talk to our team today — free consultation, transparent pricing, and guaranteed delivery. Join 1500+ Tamil Nadu businesses who trust us.
+        </motion.p>
+
+        {/* Buttons */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"
+        >
+          <button 
+            onClick={() => onAction("Redirecting to WhatsApp...")}
+            className="w-full sm:w-auto px-10 py-5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm transition-all shadow-xl shadow-green-500/20"
+          >
+            <MessageCircle className="w-6 h-6" />
+            WhatsApp Us Now
+          </button>
+          <button 
+            onClick={() => onAction("Initiating call...")}
+            className="w-full sm:w-auto px-10 py-5 bg-transparent border-2 border-white/20 hover:border-[#3ACBB1] hover:bg-[#3ACBB1]/10 text-white rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm transition-all"
+          >
+            <Phone className="w-6 h-6" />
+            Call +91 8072117912
+          </button>
+        </motion.div>
+
+        {/* Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-left mb-20 border-t border-white/10 pt-20">
+          <div className="flex items-start gap-5">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
+              <MapPin className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Location</p>
+              <p className="font-bold text-white">Coimbatore & Erode, Tamil Nadu</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-5">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
+              <Mail className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Email</p>
+              <p className="font-bold text-white">zynapse@gmail.com</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-5">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
+              <Phone className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Phone</p>
+              <p className="font-bold text-white">+91 8072117912</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-5">
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
+              <Clock className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Working Hours</p>
+              <p className="font-bold text-white">Mon–Sat, 9AM – 7PM</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Mini Features */}
+        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+          {[
+            "Free Consultation",
+            "No Hidden Charges",
+            "On-Time Delivery",
+            "1500+ Clients Served",
+            "Post-Support Included"
+          ].map((feature, i) => (
+            <div key={i} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/50">
+              <CheckCircle2 className="w-4 h-4 text-[#3ACBB1]" />
+              {feature}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const Loader = () => (
+  <motion.div 
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    exit={{ opacity: 0 }}
+    className="fixed inset-0 z-[200] bg-[#1A2B56] flex flex-col items-center justify-center"
+  >
+    <div className="w-20 h-20 relative">
+      <div className="absolute inset-0 border-4 border-[#3ACBB1]/20 rounded-full" />
+      <motion.div 
+        animate={{ rotate: 360 }}
+        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        className="absolute inset-0 border-4 border-t-[#3ACBB1] rounded-full"
+      />
+    </div>
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.2 }}
+      className="mt-8 text-[#3ACBB1] font-black uppercase tracking-[0.4em] text-xs"
+    >
+      Loading Zynapse
+    </motion.div>
+  </motion.div>
+);
+
+const RefundPolicyView = () => {
+  return (
+    <div className="pt-32 pb-24 bg-white px-6 lg:px-20 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs mb-4"
+        >
+          Customer Satisfaction
+        </motion.p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl md:text-6xl font-black text-[#1A2B56] mb-12"
+        >
+          Refund & <span className="text-[#3ACBB1]">Policy</span>
+        </motion.h1>
+
+        <div className="prose prose-slate max-w-none space-y-12">
+          <section>
+            <p className="text-lg text-slate-600 leading-relaxed font-medium">
+              At Tamilnadu Digital, we prioritize customer satisfaction and are committed to delivering the best possible web solutions. However, in situations where a client is dissatisfied, we have outlined a transparent and fair Refund & Cancellation Policy.
+            </p>
+          </section>
+
+          <section className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100">
+            <h3 className="text-2xl font-black text-[#1A2B56] mb-6 flex items-center gap-3">
+              <span className="w-2 h-8 bg-[#3ACBB1] rounded-full" />
+              Cancellation Policy
+            </h3>
+            <p className="text-slate-600 mb-6 font-medium">If a client wishes to cancel an ongoing project or service, they must send an official request to:</p>
+            <div className="bg-[#1A2B56] p-6 rounded-2xl inline-block mb-6">
+              <p className="text-[#3ACBB1] font-black tracking-widest text-lg">📧 contact@tamilnadudigital.com</p>
+            </div>
+            <div className="flex items-start gap-4 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-bold mb-6">
+              <span className="text-xl">⚠️</span>
+              <p>Please note: Cancellation requests made via phone calls, WhatsApp, or any other medium will not be accepted or processed.</p>
+            </div>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Once we receive your email request, our team will carefully review your concern and respond with the next steps. If the issue is found to be on our end, we will provide a resolution or initiate internal action within 7 working days.
+            </p>
+          </section>
+
+          <section>
+            <h3 className="text-2xl font-black text-[#1A2B56] mb-8">Refund Eligibility Table</h3>
+            <div className="overflow-hidden rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-[#1A2B56] text-white">
+                    <th className="px-8 py-6 font-black uppercase tracking-widest text-xs">Reason</th>
+                    <th className="px-8 py-6 font-black uppercase tracking-widest text-xs">Refund Policy</th>
+                    <th className="px-8 py-6 font-black uppercase tracking-widest text-xs">Explanation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 bg-white">
+                  <tr>
+                    <td className="px-8 py-6 font-bold text-slate-700">Within 24 hours of payment</td>
+                    <td className="px-8 py-6"><span className="px-3 py-1 bg-[#E6FFFA] text-[#3ACBB1] rounded-lg font-black text-[10px]">✅ 90% REFUND</span></td>
+                    <td className="px-8 py-6 text-slate-500 text-sm">10% deducted for gateway/accounting</td>
+                  </tr>
+                  <tr>
+                    <td className="px-8 py-6 font-bold text-slate-700">Within 2–3 days</td>
+                    <td className="px-8 py-6"><span className="px-3 py-1 bg-[#E6FFFA] text-[#3ACBB1] rounded-lg font-black text-[10px]">✅ 50% REFUND</span></td>
+                    <td className="px-8 py-6 text-slate-500 text-sm">Resource allocation starts immediately</td>
+                  </tr>
+                  <tr>
+                    <td className="px-8 py-6 font-bold text-slate-700">After 3 days of payment</td>
+                    <td className="px-8 py-6"><span className="px-3 py-1 bg-red-50 text-red-500 rounded-lg font-black text-[10px]">❌ NO REFUND</span></td>
+                    <td className="px-8 py-6 text-slate-500 text-sm">Work initiation makes refund ineligible</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="space-y-6">
+            <h3 className="text-2xl font-black text-[#1A2B56]">Acceptable Grounds For Refund</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[
+                { title: "Extra Payment", status: "100% Refund", color: "green", desc: "After gateway charges." },
+                { title: "Design Disinterest", status: "No Refund", color: "red", desc: "We provide multiple revisions." },
+                { title: "Delivery Delay", status: "Up to 50%", color: "green", desc: "After internal review of delay." },
+                { title: "SEO Performance", status: "No Refund", color: "red", desc: "We offer 2 months extra service instead." }
+              ].map((item, i) => (
+                <div key={i} className="p-8 rounded-3xl border border-slate-100 bg-white shadow-lg shadow-slate-100">
+                  <p className="text-[10px] font-black tracking-widest text-slate-400 uppercase mb-2">{item.title}</p>
+                  <p className={`text-xl font-black mb-2 ${item.color === 'green' ? 'text-[#3ACBB1]' : 'text-red-500'}`}>{item.status}</p>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="bg-[#3ACBB1] p-12 rounded-[3rem] text-white">
+            <h3 className="text-3xl font-black mb-6">How to Request a Refund</h3>
+            <p className="font-bold mb-8 text-white/90">Email us at contact@tamilnadudigital.com include your reason, service name, and payment details.</p>
+            <div className="flex flex-wrap gap-4">
+              <span className="px-4 py-2 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">Original Source Only</span>
+              <span className="px-4 py-2 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">Verified Terms</span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const PrivacyPolicyView = () => {
+  return (
+    <div className="pt-32 pb-24 bg-white px-6 lg:px-20 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        <motion.p 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs mb-4"
+        >
+          Data Protection
+        </motion.p>
+        <motion.h1 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-4xl md:text-6xl font-black text-[#1A2B56] mb-12"
+        >
+          Privacy & <span className="text-[#3ACBB1]">Policy</span>
+        </motion.h1>
+
+        <div className="prose prose-slate max-w-none space-y-12">
+          <section>
+            <p className="text-lg text-slate-600 leading-relaxed font-medium">
+              Introduction: This Privacy Policy (“Policy”) explains the privacy practices of Tamilnadu Digital regarding the collection, use, and sharing of your personal and organizational data.
+            </p>
+          </section>
+
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div>
+              <h3 className="text-2xl font-black text-[#1A2B56] mb-8 flex items-center gap-3">
+                <span className="w-2 h-8 bg-[#3ACBB1] rounded-full" />
+                Information We Collect
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  "Name and job title",
+                  "Contact information (email/phone)",
+                  "Demographic details (location)",
+                  "Business-related information",
+                  "Survey & feedback details"
+                ].map((li, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-600 font-bold text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-[#3ACBB1]" />
+                    {li}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-2xl font-black text-[#1A2B56] mb-8 flex items-center gap-3">
+                <span className="w-2 h-8 bg-[#3ACBB1] rounded-full" />
+                How We Use Data
+              </h3>
+              <ul className="space-y-4">
+                {[
+                  "Internal record keeping",
+                  "Improving services & offerings",
+                  "Promotional communications",
+                  "Market research & surveys",
+                  "Personalizing web experience"
+                ].map((li, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-600 font-bold text-sm">
+                    <CheckCircle2 className="w-5 h-5 text-[#3ACBB1]" />
+                    {li}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+
+          <section className="bg-slate-50 p-12 rounded-[3.5rem] border border-slate-100 shadow-inner">
+            <h3 className="text-2xl font-black text-[#1A2B56] mb-6">Data Security & Trust</h3>
+            <p className="text-slate-600 leading-relaxed font-medium mb-8">
+              We implement a combination of physical, electronic, and administrative procedures to safeguard the information we collect. Tamilnadu Digital never sells or shares your information with third parties without your explicit consent.
+            </p>
+            <div className="flex items-center gap-4 p-6 bg-white rounded-3xl border border-slate-200">
+               <div className="w-12 h-12 bg-[#3ACBB1]/10 rounded-2xl flex items-center justify-center text-[#3ACBB1]">
+                 <AtSign className="w-6 h-6" />
+               </div>
+               <div>
+                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inquiries</p>
+                 <p className="text-[#1A2B56] font-black">support@tamilnadudigital.com</p>
+               </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function App() {
+  const [view, setView] = useState<"main" | "journey" | "refund" | "privacy">("main");
+  const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
+
+  const handleSetView = (newView: "main" | "journey" | "refund" | "privacy") => {
+    setLoading(true);
+    setTimeout(() => {
+      setView(newView);
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setTimeout(() => setLoading(false), 500);
+    }, 800);
+  };
 
   const showToast = (message: string) => {
     setToast({ message, visible: true });
@@ -1243,13 +1895,59 @@ export default function App() {
 
   return (
     <div className="min-h-screen selection:bg-accent selection:text-white">
-      <Navbar onAction={showToast} />
+      <AnimatePresence>
+        {loading && <Loader />}
+      </AnimatePresence>
+      <Navbar onAction={showToast} setView={handleSetView} currentView={view} />
       <main>
-        <Hero onAction={showToast} />
-        <CoreServices onAction={showToast} />
-        <Process />
+        <AnimatePresence mode="wait">
+          {view === "main" ? (
+            <motion.div
+              key="main"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <Hero onAction={showToast} />
+              <CoreServices onAction={showToast} />
+              <Process />
+              <ReadyToGrow onAction={showToast} />
+            </motion.div>
+          ) : view === "journey" ? (
+            <motion.div
+              key="journey"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ProcessJourneyView />
+            </motion.div>
+          ) : view === "refund" ? (
+            <motion.div
+              key="refund"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <RefundPolicyView />
+            </motion.div>
+          ) : view === "privacy" ? (
+            <motion.div
+              key="privacy"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <PrivacyPolicyView />
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </main>
-      <Footer onAction={showToast} />
+      <Footer onAction={showToast} setView={handleSetView} />
 
       {/* Global Toast Notification */}
       <AnimatePresence>
