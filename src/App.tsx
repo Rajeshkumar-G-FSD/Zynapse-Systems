@@ -17,11 +17,15 @@ import {
   AtSign,
   Quote,
   ChevronRight,
+  ChevronLeft,
   ChevronDown,
   Zap,
   Server,
   CreditCard,
-  BarChart3
+  BarChart3,
+  Monitor,
+  Users,
+  Code2
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -33,19 +37,6 @@ const Navbar = ({ onAction }: { onAction: (m: string) => void }) => {
           <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
         </div>
         <div className="text-xl font-black tracking-tighter text-on-surface uppercase">Zynapse Sys</div>
-      </div>
-      
-      <div className="hidden md:flex gap-8 items-center font-sans text-[14px] font-bold">
-        <a href="#about" className="cursor-pointer hover:text-secondary-accent transition-colors">About</a>
-        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Company details coming soon")}>
-          Company <ChevronDown className="w-4 h-4" />
-        </div>
-        <div className="flex items-center gap-1 cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Product catalog opening...")}>
-          Products <ChevronDown className="w-4 h-4" />
-        </div>
-        <a href="#careers" className="cursor-pointer hover:text-secondary-accent transition-colors">Careers</a>
-        <div className="cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Customer stories loading...")}>Customers</div>
-        <div className="cursor-pointer hover:text-secondary-accent transition-colors" onClick={() => onAction("Support portal opening...")}>Support</div>
       </div>
 
       <motion.button 
@@ -61,111 +52,172 @@ const Navbar = ({ onAction }: { onAction: (m: string) => void }) => {
 };
 
 const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
-  const [word, setWord] = useState("Products");
-  
+  const slides = [
+    {
+      title: "BRING YOUR BUSINESS TO NEXT LEVEL OF EXCELLENCE",
+      subtitle: "Driven by the passion to assist our clients build a robust IT fortress through innovations and agility",
+      image: "https://picsum.photos/seed/excellence/1920/1080?blur=2",
+      button: "Know More"
+    },
+    {
+      title: "WE PROMOTE YOUR DREAM",
+      subtitle: "Zynapse Sys will be a support and ever worthy partner for you to manage",
+      image: "https://picsum.photos/seed/dream/1920/1080?blur=2",
+      button: "Know More"
+    },
+    {
+      title: "CLIENT SPECIFIC SOFTWARE MOULDING",
+      subtitle: "A software should sync with the soul of a company and Zynapse Sys makes sure that it does",
+      image: "https://picsum.photos/seed/software/1920/1080?blur=2",
+      button: "Know More"
+    },
+    {
+      title: "TRANSFORM YOUR BUSINESS WITH THE POWER OF WEB",
+      subtitle: "We help you to attain an unbelievable transformation in your business",
+      image: "https://picsum.photos/seed/web/1920/1080?blur=2",
+      button: "Know More"
+    },
+    {
+      title: "Transform your Business with world-class Software Development",
+      subtitle: "Building data-driven, technology-powered digital solutions to create exceptional customer experiences, streamlined workflow and intelligent strategies that catalyse growth.",
+      image: "https://picsum.photos/seed/team/1920/1080?blur=2",
+      isComplex: true,
+      features: [
+        { icon: <Monitor className="w-10 h-10" />, title: "Digital Transformation", desc: "Smart, scalable, future-ready solutions for your business." },
+        { icon: <Users className="w-10 h-10" />, title: "Software Development", desc: "Custom software tailored to your business needs." },
+        { icon: <Cpu className="w-10 h-10" />, title: "Emerging Technologies", desc: "Harness AI, IoT, and blockchain for a future-ready business." }
+      ]
+    },
+    {
+      title: "INNOVATING FOR A DIGITAL FUTURE",
+      subtitle: "Our deep multi-vertical expertise empowers your business to stay ahead in the rapidly evolving technological landscape.",
+      image: "https://picsum.photos/seed/future/1920/1080?blur=2",
+      button: "Start Free Trial"
+    }
+  ];
+
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setWord((prev) => (prev === "Products" ? "Software" : "Products"));
-    }, 1000);
-    return () => clearInterval(interval);
+    const timer = setInterval(nextSlide, 8000);
+    return () => clearInterval(timer);
   }, []);
 
+  const slide = slides[currentSlide];
+
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-32 pb-20 overflow-hidden px-6 soft-gradient-bg">
-      {/* Floating Decorative Icons */}
-      <motion.div 
-        animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[25%] left-[15%] p-4 bg-[#FF9500]/20 rounded-xl brutal-border hidden lg:block cursor-pointer"
-        onClick={() => onAction("Server status: Optimal")}
-      >
-        <Server className="w-10 h-10 text-[#FF9500]" />
-      </motion.div>
-      
-      <motion.div 
-        animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute top-[20%] right-[15%] p-4 bg-[#7000FF]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
-        onClick={() => onAction("Payment gateway: Secure")}
-      >
-        <CreditCard className="w-10 h-10 text-[#7000FF]" />
-      </motion.div>
-
-      <motion.div 
-        animate={{ x: [0, 20, 0] }}
-        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[20%] left-[10%] p-4 bg-[#007AFF]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
-        onClick={() => onAction("System speed: 1.2ms")}
-      >
-        <Zap className="w-10 h-10 text-[#007AFF]" />
-      </motion.div>
-
-      <motion.div 
-        animate={{ scale: [1, 1.1, 1] }}
-        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-[15%] right-[12%] p-4 bg-[#34C759]/10 rounded-xl brutal-border hidden lg:block cursor-pointer"
-        onClick={() => onAction("Analytics: Real-time active")}
-      >
-        <BarChart3 className="w-10 h-10 text-[#34C759]" />
-      </motion.div>
-
-      <div className="relative z-10 max-w-5xl w-full text-center space-y-8">
-        <motion.h1 
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-6xl md:text-8xl font-black tracking-tight leading-[1.1] text-black"
+    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
+      {/* Background with cross-fade */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="absolute inset-0 z-0"
         >
-          Exceptional{" "}
-          <span className="inline-block min-w-[300px] md:min-w-[450px]">
-            <AnimatePresence mode="wait">
-              <motion.span
-                key={word}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="inline-block"
-              >
-                {word}
-              </motion.span>
-            </AnimatePresence>
-          </span>
-          <br/>
-          charged with <br/>
-          <span className="text-gradient-ai">AI Superpowers</span>
-        </motion.h1>
-        
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="text-xl md:text-2xl text-on-surface-variant font-medium max-w-3xl mx-auto leading-relaxed"
-        >
-          Best-in-class Azure management, and documentation software. Now amped up with AI.
-        </motion.p>
-
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
-          className="flex justify-center gap-6 pt-4"
-        >
-          <button 
-            onClick={() => onAction("Initializing setup wizard...")}
-            className="btn-gradient px-10 py-4 rounded-full font-bold text-lg shadow-xl shadow-secondary-accent/20"
-          >
-            Get Started
-          </button>
-          <button 
-            onClick={() => {
-              const el = document.getElementById('about');
-              el?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="bg-white brutal-border px-10 py-4 rounded-full font-bold text-lg hover:bg-surface-container-low transition-colors"
-          >
-            Learn More
-          </button>
+          <div className="absolute inset-0 bg-black/60 z-10" />
+          <img 
+            src={slide.image} 
+            className="w-full h-full object-cover" 
+            alt="background" 
+            referrerPolicy="no-referrer"
+          />
         </motion.div>
+      </AnimatePresence>
+
+      <div className="relative z-20 max-w-7xl w-full px-6 md:px-12">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentSlide}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="space-y-8"
+          >
+            <div className="max-w-4xl">
+              <motion.h1 
+                className={`font-black tracking-tight leading-[1.1] text-white uppercase ${slide.isComplex ? 'text-4xl md:text-6xl' : 'text-5xl md:text-8xl'}`}
+              >
+                {slide.title.split(' ').map((w, i) => (
+                  <span key={i} className={w.toLowerCase() === 'software' || w.toLowerCase() === 'web' || w.toLowerCase() === 'excellence' ? 'text-primary-accent' : ''}>
+                    {w}{" "}
+                  </span>
+                ))}
+              </motion.h1>
+              
+              <motion.p className="text-lg md:text-xl text-white/80 font-medium max-w-2xl mt-6 leading-relaxed">
+                {slide.subtitle}
+              </motion.p>
+            </div>
+
+            {!slide.isComplex ? (
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => onAction("Redirecting to information page...")}
+                className="bg-[#FF0000] hover:bg-[#CC0000] text-white px-10 py-4 font-bold text-lg transition-colors uppercase tracking-wider"
+              >
+                {slide.button}
+              </motion.button>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-white/20">
+                {slide.features?.map((f, i) => (
+                  <div key={i} className="flex flex-col gap-4 text-white">
+                    <div className="flex items-center gap-4">
+                      <div className="text-white/80">{f.icon}</div>
+                      <h4 className="text-xl font-bold uppercase tracking-tight">{f.title}</h4>
+                    </div>
+                    <p className="text-sm text-white/60 font-medium">{f.desc}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Navigation Arrows */}
+      <div className="absolute bottom-10 right-10 z-30 flex items-center gap-4">
+        <button 
+          onClick={prevSlide}
+          className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={nextSlide}
+          className="w-12 h-12 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+      </div>
+
+      {/* Floating Contact Bubble */}
+      <motion.div 
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        onClick={() => onAction("Opening contact form...")}
+        className="fixed bottom-6 right-6 z-50 bg-[#FF0000] text-white px-6 py-4 rounded-xl flex items-center gap-3 shadow-2xl cursor-pointer hover:bg-[#CC0000] transition-colors"
+      >
+        <Mail className="w-6 h-6" />
+        <span className="font-bold uppercase tracking-widest text-sm">Contact us</span>
+      </motion.div>
+
+      {/* Slide Indicators */}
+      <div className="absolute bottom-10 left-10 z-30 flex gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentSlide(i)}
+            className={`h-1 rounded-full transition-all duration-500 ${i === currentSlide ? 'w-8 bg-white' : 'w-4 bg-white/30'}`}
+          />
+        ))}
       </div>
     </section>
   );
@@ -231,6 +283,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       description: "Search from over 10,000+ properties for sale and rent.",
       accent: "#FF9500",
       categories: ["Buy", "Rent", "Sell"],
+      heroImage: "https://i.postimg.cc/PxQyjGKG/Modern-real-estate-search-on-devices.png",
       items: [
         { name: "Modern Villa", price: "₹8.5 Cr", location: "Mumbai", img: "https://picsum.photos/seed/house1/400/300" },
         { name: "Sky Apartment", price: "₹12.5 Cr", location: "Bangalore", img: "https://picsum.photos/seed/house2/400/300" },
@@ -244,6 +297,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       description: "Find the best car wash and detailing services near you.",
       accent: "#007AFF",
       categories: ["Wash", "Detailing", "Oil Change"],
+      heroImage: "https://i.postimg.cc/fL047FMN/Zynapse-Car-Wash-app-showcase.png",
       items: [
         { name: "Full Service Wash", price: "₹2,999", location: "Premium", img: "https://picsum.photos/seed/car1/400/300" },
         { name: "Express Detail", price: "₹14,699", location: "Interior", img: "https://picsum.photos/seed/car2/400/300" },
@@ -257,6 +311,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       description: "Discover the best cuisines from top-rated local restaurants.",
       accent: "#FF2D55",
       categories: ["Pizza", "Burgers", "Sushi", "Desserts"],
+      heroImage: "https://i.postimg.cc/DZbVQD7F/Zynapse-food-delivery-app-mockup.png",
       items: [
         { name: "Burger Bistro", price: "₹599", location: "4.8 ★", img: "https://picsum.photos/seed/food1/400/300" },
         { name: "Sushi Master", price: "₹1,299", location: "4.9 ★", img: "https://picsum.photos/seed/food2/400/300" },
@@ -270,6 +325,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       description: "Get top-rated professionals for your home service needs.",
       accent: "#34C759",
       categories: ["Cleaning", "Plumbing", "Electrical", "Moving"],
+      heroImage: "https://i.postimg.cc/50Fc5Gfd/Zynapse-home-services-app-interface.png",
       items: [
         { name: "House Cleaning", price: "₹1,899", location: "Verified", img: "https://picsum.photos/seed/service1/400/300" },
         { name: "Plumbing Repair", price: "₹799", location: "Expert", img: "https://picsum.photos/seed/service2/400/300" },
@@ -283,10 +339,25 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
       description: "Find the best deals on hotels, flights and car rentals for your next trip.",
       accent: "#7000FF",
       categories: ["Hotels", "Flights", "Cars", "Tours"],
+      heroImage: "https://i.postimg.cc/ZRykPgJz/Zynapse-travel-platform-on-devices.png",
       items: [
         { name: "Honolulu, HI", price: "₹1,10,000", location: "Resort", img: "https://picsum.photos/seed/travel1/400/300" },
         { name: "Paris, France", price: "₹1,45,000", location: "Luxury", img: "https://picsum.photos/seed/travel2/400/300" },
         { name: "Cancun, Mexico", price: "₹95,000", location: "All-Inc", img: "https://picsum.photos/seed/travel3/400/300" }
+      ]
+    },
+    {
+      id: "ecommerce",
+      title: "E-Commerce Experience",
+      subtitle: "Seamless Digital Retail",
+      description: "Building next-generation retail experiences with integrated AI and AR.",
+      accent: "#FF2D55",
+      categories: ["Fashion", "Tech", "Home", "Beauty"],
+      heroImage: "https://i.postimg.cc/Hn7N5741/E-commerce-website-mockup-for-Zynapse.png",
+      items: [
+        { name: "Luxe Fashion", price: "₹2,499", location: "Trending", img: "https://picsum.photos/seed/shop1/400/300" },
+        { name: "Smart Gadgets", price: "₹14,999", location: "New", img: "https://picsum.photos/seed/shop2/400/300" },
+        { name: "Beauty Kits", price: "₹899", location: "Top", img: "https://picsum.photos/seed/shop3/400/300" }
       ]
     }
   ];
@@ -296,7 +367,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
   useEffect(() => {
     const timer = setInterval(() => {
       setIndex((prev) => (prev + 1) % products.length);
-    }, 5000);
+    }, 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -366,7 +437,7 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
                   <h4 className="text-4xl md:text-5xl font-black tracking-tight text-black leading-tight">
                     {current.subtitle}
                   </h4>
-                  <p className="text-on-surface-variant font-medium text-lg leading-relaxed">
+                  <p className="text-on-surface-variant font-medium text-lg leading-relaxed text-left">
                     {current.description}
                   </p>
                   <button 
@@ -376,32 +447,36 @@ const ProductShowcase = ({ onAction }: { onAction: (m: string) => void }) => {
                   >
                     Explore Platform
                   </button>
-                </div>
-
-                <div className="lg:col-span-8">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    {current.items.map((item, i) => (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: i * 0.1 + 0.3 }}
-                        key={i}
-                        onClick={() => onAction(`Viewing details for ${item.name}...`)}
-                        className="bg-white rounded-2xl brutal-border overflow-hidden group cursor-pointer"
-                      >
-                        <div className="h-40 overflow-hidden">
-                          <img src={item.img} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" referrerPolicy="no-referrer" />
+                  
+                  {/* Miniature features grid */}
+                  <div className="grid grid-cols-1 gap-3 pt-4">
+                    {current.items.slice(0, 2).map((item, i) => (
+                      <div key={i} className="flex items-center gap-4 bg-white/50 p-4 rounded-2xl brutal-border">
+                        <img src={item.img} className="w-12 h-12 rounded-lg object-cover" referrerPolicy="no-referrer" />
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-black">{item.name}</p>
+                          <p className="text-sm font-black">{item.price}</p>
                         </div>
-                        <div className="p-5 space-y-2">
-                          <div className="flex justify-between items-start">
-                            <h5 className="font-black text-sm uppercase tracking-tight">{item.name}</h5>
-                            <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-surface-container-high" style={{ color: current.accent }}>{item.location}</span>
-                          </div>
-                          <p className="text-xl font-black text-black">{item.price}</p>
-                        </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </div>
+                </div>
+
+                <div className="lg:col-span-8 flex items-center justify-center">
+                  <motion.div
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.8 }}
+                    className="relative w-full aspect-video rounded-3xl overflow-hidden brutal-border shadow-2xl"
+                  >
+                    <img 
+                      src={current.heroImage} 
+                      alt={current.title} 
+                      className="w-full h-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none"></div>
+                  </motion.div>
                 </div>
               </div>
             </motion.div>
@@ -873,15 +948,6 @@ export default function App() {
       <Navbar onAction={showToast} />
       <main>
         <Hero onAction={showToast} />
-        <About />
-        <ProductShowcase onAction={showToast} />
-        <Expertise onAction={showToast} />
-        <Process />
-        <Pricing onAction={showToast} />
-        <Portfolio onAction={showToast} />
-        <Careers onAction={showToast} />
-        <Testimonials />
-        <Contact onAction={showToast} />
       </main>
       <Footer onAction={showToast} />
 
