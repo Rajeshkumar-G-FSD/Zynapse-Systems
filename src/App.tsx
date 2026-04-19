@@ -1293,7 +1293,9 @@ const Careers = ({ onAction }: { onAction: (m: string) => void }) => {
     { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Career growth opportunities" },
     { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Paid leave on Birthday" },
     { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Yearly Vacation" },
-    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Get professional education" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Medical Insurance" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Pay for Learning" },
+    { icon: <CheckCircle2 className="w-5 h-5 text-secondary-accent" />, text: "Bonus Yearly Once" },
   ];
 
   return (
