@@ -55,11 +55,12 @@ const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: st
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   const menuItems = [
-    { name: 'HOME', section: 'hero' },
-    { name: 'ABOUT', section: 'services' },
-    { name: 'WE OFFER', section: 'services' },
-    { name: 'PORTFOLIO', section: 'process' },
-    { name: 'RECENT WORK', section: 'team' }
+    { name: 'HOME', section: 'hero', view: 'main' },
+    { name: 'ABOUT', section: 'services', view: 'main' },
+    { name: 'TEAMS', section: 'team', view: 'main' },
+    { name: 'CAREERS', section: 'careers', view: 'main' },
+    { name: 'HOW IT WORKS', section: 'process', view: 'main' },
+    { name: 'CONTACT', section: 'contact', view: 'contact' }
   ];
 
   return (
@@ -78,15 +79,18 @@ const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: st
           <button 
             key={item.name}
             onClick={() => {
-              if (item.name === 'HOME') {
+              if (item.view === 'main') {
                 setView("main");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
+                if (item.name === 'HOME') {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                  setTimeout(() => {
+                    const element = document.getElementById(item.section);
+                    if (element) element.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }
               } else {
-                setView("main");
-                setTimeout(() => {
-                  const element = document.getElementById(item.section);
-                  if (element) element.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
+                setView(item.view);
               }
             }}
             className="text-[11px] font-black tracking-[0.25em] text-white/80 hover:text-white transition-all relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white hover:after:w-full after:transition-all"
@@ -143,15 +147,18 @@ const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: st
                   key={item.name}
                   onClick={() => {
                     setIsMobileMenuOpen(false);
-                    if (item.name === 'HOME') {
+                    if (item.view === 'main') {
                       setView("main");
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                      if (item.name === 'HOME') {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      } else {
+                        setTimeout(() => {
+                          const element = document.getElementById(item.section);
+                          if (element) element.scrollIntoView({ behavior: 'smooth' });
+                        }, 100);
+                      }
                     } else {
-                      setView("main");
-                      setTimeout(() => {
-                        const element = document.getElementById(item.section);
-                        if (element) element.scrollIntoView({ behavior: 'smooth' });
-                      }, 100);
+                      setView(item.view);
                     }
                   }}
                   className="text-4xl font-black text-white/50 hover:text-[#3ACBB1] transition-all text-left uppercase tracking-tighter"
@@ -2175,13 +2182,115 @@ const PrivacyPolicyView = () => {
   );
 };
 
+const ContactView = ({ onAction }: { onAction: (m: string) => void }) => {
+  return (
+    <section className="pt-40 pb-32 bg-white px-6 lg:px-20 min-h-screen" id="contact">
+      <div className="max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
+          {/* Left Column: Contact Content */}
+          <div className="space-y-12">
+            <div className="space-y-6">
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-[#3ACBB1] font-black tracking-[0.4em] uppercase text-xs"
+              >
+                Get In Touch
+              </motion.p>
+              <motion.h1 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-6xl md:text-8xl font-black text-[#1A2B56] tracking-tighter leading-[0.9]"
+              >
+                Let's Start a <span className="text-[#3ACBB1]">Conversation</span>
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="text-xl text-slate-500 font-medium leading-relaxed max-w-xl"
+              >
+                Whether you're looking for enterprise solutions, digital transformation, or just want to explore possibilities — our team of experts is ready to help.
+              </motion.p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                { title: "Direct Email", value: "intelligence@zynapse.io", icon: <Mail className="w-6 h-6" /> },
+                { title: "Office Phone", value: "+91 8072117912", icon: <Phone className="w-6 h-6" /> },
+                { title: "Gibraltar HQ", value: "Casemates Square, no253", icon: <MapPin className="w-6 h-6" /> },
+                { title: "Business Hours", value: "Mon - Fri, 9AM - 6PM", icon: <Clock className="w-6 h-6" /> }
+              ].map((item, i) => (
+                <div key={i} className="p-8 rounded-[2rem] border border-slate-100 bg-slate-50/50 hover:bg-white hover:shadow-xl transition-all group">
+                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-[#3ACBB1] mb-6 shadow-sm group-hover:bg-[#3ACBB1] group-hover:text-white transition-all">
+                    {item.icon}
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2">{item.title}</p>
+                  <p className="text-[#1A2B56] font-bold">{item.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Right Column: Contact Form */}
+          <motion.div 
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="bg-[#1A2B56] p-10 md:p-16 rounded-[3rem] shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute top-0 right-0 w-64 h-64 bg-[#3ACBB1] opacity-5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+            
+            <form className="space-y-8 relative z-10" onSubmit={(e) => {
+              e.preventDefault();
+              onAction("Message received! Our team will contact you shortly.");
+              (e.target as HTMLFormElement).reset();
+            }}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Full Name</label>
+                  <input type="text" required placeholder="John Doe" className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:ring-4 focus:ring-[#3ACBB1]/50 text-white transition-all placeholder:text-white/20" />
+                </div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Email Address</label>
+                  <input type="email" required placeholder="john@example.com" className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:ring-4 focus:ring-[#3ACBB1]/50 text-white transition-all placeholder:text-white/20" />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Service Interest</label>
+                <select className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:ring-4 focus:ring-[#3ACBB1]/50 text-white appearance-none font-bold text-sm">
+                  <option className="bg-[#1A2B56]">Website Development</option>
+                  <option className="bg-[#1A2B56]">E-commerce Store</option>
+                  <option className="bg-[#1A2B56]">Digital Marketing</option>
+                  <option className="bg-[#1A2B56]">Social Media Management</option>
+                  <option className="bg-[#1A2B56]">Branding & Design</option>
+                </select>
+              </div>
+
+              <div className="space-y-3">
+                <label className="text-[10px] font-black uppercase tracking-[0.3em] text-white/50">Your Message</label>
+                <textarea rows={4} required placeholder="How can Zynapse help your business grow?" className="w-full bg-white/5 border border-white/10 p-5 rounded-2xl focus:ring-4 focus:ring-[#3ACBB1]/50 text-white transition-all placeholder:text-white/20 resize-none"></textarea>
+              </div>
+
+              <button className="w-full py-6 bg-[#3ACBB1] text-black font-black uppercase tracking-[0.2em] text-xs rounded-2xl hover:bg-white transition-all shadow-xl shadow-[#3ACBB1]/20 flex items-center justify-center gap-3">
+                <Send className="w-4 h-4" />
+                SEND MESSAGE
+              </button>
+            </form>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export default function App() {
-  const [view, setView] = useState<"main" | "journey" | "refund" | "privacy">("main");
+  const [view, setView] = useState<"main" | "journey" | "refund" | "privacy" | "contact">("main");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const handleSetView = (newView: "main" | "journey" | "refund" | "privacy") => {
+  const handleSetView = (newView: "main" | "journey" | "refund" | "privacy" | "contact") => {
     setLoading(true);
     setTimeout(() => {
       setView(newView);
@@ -2221,6 +2330,7 @@ export default function App() {
               <Process />
               <TeamSection />
               <TeamFeatures />
+              <Careers onAction={showToast} />
               <OfficeMap />
             </motion.div>
           ) : view === "journey" ? (
@@ -2252,6 +2362,16 @@ export default function App() {
               transition={{ duration: 0.5 }}
             >
               <PrivacyPolicyView />
+            </motion.div>
+          ) : view === "contact" ? (
+            <motion.div
+              key="contact"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 1.05 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ContactView onAction={showToast} />
             </motion.div>
           ) : null}
         </AnimatePresence>
