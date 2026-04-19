@@ -38,7 +38,12 @@ import {
   Rocket,
   FileText,
   Clock,
-  MessageCircle
+  MessageCircle,
+  Facebook,
+  Linkedin,
+  Twitter,
+  Youtube,
+  Instagram
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
@@ -51,7 +56,7 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
             <div className="w-6 h-6 border-4 border-slate-900 -rotate-45"></div>
           </div>
         </div>
-        <div className="text-2xl font-black tracking-tight text-white uppercase italic">Corporate</div>
+        <div className="text-2xl font-black tracking-tight text-white uppercase italic">Zynapse</div>
       </div>
 
       <div className="hidden lg:flex items-center gap-8">
@@ -140,6 +145,31 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
           DISCOVER NOW
         </motion.button>
       </div>
+
+      {/* Social Icons Vertical Rail */}
+      <motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.8, delay: 1 }}
+        className="absolute right-8 top-1/2 -translate-y-1/2 z-20 hidden md:flex flex-col gap-4"
+      >
+        {[
+          { icon: Facebook, label: "Facebook" },
+          { icon: Linkedin, label: "LinkedIn" },
+          { icon: Twitter, label: "Twitter" },
+          { icon: Youtube, label: "YouTube" },
+          { icon: Instagram, label: "Instagram" }
+        ].map((social, i) => (
+          <motion.a
+            key={i}
+            href={`#${social.label.toLowerCase()}`}
+            whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.2)" }}
+            className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white transition-all hover:border-white shadow-lg backdrop-blur-sm"
+          >
+            <social.icon className="w-5 h-5" />
+          </motion.a>
+        ))}
+      </motion.div>
 
       {/* Floating Contact Bubble */}
       <motion.div 
@@ -364,7 +394,7 @@ const TeamSection = () => {
             className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight leading-tight"
           >
             Meet the minds <br />
-            <span className="text-slate-400">behind Corporate</span>
+            <span className="text-slate-400">behind Zynapse</span>
           </motion.h2>
         </div>
 
@@ -463,34 +493,20 @@ const TeamSection = () => {
         </div>
 
         {/* Controls */}
-        <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-12">
-          <div className="w-full h-[6px] bg-slate-100 rounded-full relative overflow-hidden">
-            <motion.div 
-              className="absolute inset-y-0 left-0 bg-[#1A2B56]"
-              initial={{ width: "0%" }}
-              animate={{ width: `${((currentIndex + 1) / members.length) * 100}%` }}
-            />
-          </div>
-          
-          <div className="flex items-center gap-8 shrink-0">
-            <div className="text-sm font-black text-slate-900 min-w-[80px] flex items-baseline gap-1">
-              <span className="text-3xl text-[#1A2B56]">{currentIndex + 1}</span>
-              <span className="text-slate-400">/ {members.length}</span>
-            </div>
-            <div className="flex gap-3">
-              <button 
-                onClick={() => setCurrentIndex((prev) => (prev - 1 + members.length) % members.length)}
-                className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
-              >
-                <ChevronLeft className="w-6 h-6" />
-              </button>
-              <button 
-                onClick={() => setCurrentIndex((prev) => (prev + 1) % members.length)}
-                className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
-              >
-                <ChevronRight className="w-6 h-6" />
-              </button>
-            </div>
+        <div className="mt-16 flex justify-end">
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setCurrentIndex((prev) => (prev - 1 + members.length) % members.length)}
+              className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+            <button 
+              onClick={() => setCurrentIndex((prev) => (prev + 1) % members.length)}
+              className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </div>
@@ -1323,7 +1339,7 @@ const Contact = ({ onAction }: { onAction: (m: string) => void }) => {
                 <select className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black appearance-none font-mono text-sm font-bold">
                   <option>SaaS Platform</option>
                   <option>Mobile App</option>
-                  <option>Corporate Web</option>
+                  <option>Zynapse Web</option>
                 </select>
               </div>
               <div className="space-y-2">
