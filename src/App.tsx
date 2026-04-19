@@ -60,16 +60,31 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
       </div>
 
       <div className="hidden lg:flex items-center gap-8">
-        {['HOME', 'ABOUT', 'WE OFFER', 'PORTFOLIO', 'RECENT WORK', 'CONTACT'].map((item) => (
+        {[
+          { name: 'HOME', section: 'hero' },
+          { name: 'ABOUT', section: 'services' },
+          { name: 'WE OFFER', section: 'services' },
+          { name: 'PORTFOLIO', section: 'process' },
+          { name: 'RECENT WORK', section: 'team' },
+          { name: 'CONTACT', section: 'contact' }
+        ].map((item) => (
           <button 
-            key={item}
+            key={item.name}
             onClick={() => {
-              if (item === 'HOME') setView("main");
-              else onAction(`Navigating to ${item}...`);
+              if (item.name === 'HOME') {
+                setView("main");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              } else {
+                setView("main");
+                setTimeout(() => {
+                  const element = document.getElementById(item.section);
+                  if (element) element.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }
             }}
             className="text-[11px] font-black tracking-[0.25em] text-white/80 hover:text-white transition-all relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white hover:after:w-full after:transition-all"
           >
-            {item}
+            {item.name}
           </button>
         ))}
         <div className="flex items-center gap-1 text-[11px] font-black tracking-[0.25em] text-white/80 cursor-pointer hover:text-white transition-all">
@@ -88,7 +103,7 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
 
 const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
   return (
-    <section className="relative h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+    <section id="hero" className="relative h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
       {/* Background with Dark Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
@@ -139,7 +154,9 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
           transition={{ duration: 0.8, delay: 0.6 }}
           whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(168, 85, 247, 0.4)" }}
           whileTap={{ scale: 0.95 }}
-          onClick={() => onAction("Discovering now...")}
+          onClick={() => {
+            document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' });
+          }}
           className="px-10 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#A855F7] text-white rounded-full font-black uppercase tracking-[0.2em] text-[12px] transition-all shadow-xl shadow-purple-500/20"
         >
           DISCOVER NOW
@@ -1365,6 +1382,162 @@ const Contact = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
+const TeamFeatures = () => {
+  return (
+    <section className="py-24 bg-white px-6 lg:px-20 overflow-hidden" id="features">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* Left Side: Content */}
+        <div className="space-y-10">
+          <div className="space-y-6">
+            <div className="relative w-12 h-12">
+               <div className="absolute inset-0 bg-[#A855F7]/20 rotate-45 rounded-xl blur-lg" />
+               <div className="relative w-full h-full bg-gradient-to-br from-[#8B5CF6] to-[#A855F7] rotate-45 flex items-center justify-center shadow-lg">
+                 <div className="w-5 h-5 border-[3px] border-white -rotate-45" />
+               </div>
+            </div>
+            <p className="text-slate-400 font-black tracking-[0.4em] uppercase text-[10px]">
+              DISCOVER THE FEATURES
+            </p>
+            <h2 className="text-5xl md:text-7xl font-black text-[#1A2B56] leading-[1] tracking-tighter">
+              We build a strong team <br />
+              of great people
+            </h2>
+          </div>
+          
+          <p className="text-slate-500 font-medium leading-relaxed max-w-xl text-lg">
+            Cras ex mauris, ornare eget pretium sit amet, dignissim et turpis. Nunc nec maximus dui, vel suscipit dolor. Donec elementum velit a orci facilisis rutrum. Nam convallis vel erat id dictum. Sed ut risus in orci convallis viverra.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
+            {[
+              "Nunc nec maximus dui,",
+              "Aenean pellentesque elit vitae",
+              "Aenean pellentesque elit vitae",
+              "Ex mauris, ornare eget pretium",
+              "Cras ex mauris, ornare eget preti"
+            ].map((feature, i) => (
+              <div key={i} className="flex items-center gap-4 group cursor-default">
+                <div className="w-2 h-2 rounded-full bg-[#3ACBB1] group-hover:scale-150 transition-transform duration-300" />
+                <span className="text-slate-700 font-bold text-sm tracking-tight">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Right Side: Image Grid */}
+        <div className="grid grid-cols-2 gap-6 h-[700px]">
+          <div className="space-y-6 flex flex-col justify-end">
+            <div className="h-[60%] rounded-[3rem] overflow-hidden group shadow-2xl relative">
+              <div className="absolute inset-0 bg-accent/10 opacity-0 group-hover:opacity-100 transition-opacity z-10" />
+              <img 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100" 
+                alt="Team working" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="h-[35%] rounded-[3rem] overflow-hidden group shadow-xl relative">
+              <img 
+                src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?auto=format&fit=crop&q=80" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100" 
+                alt="Office culture" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+          <div className="space-y-6">
+             <div className="h-[35%] rounded-[3rem] overflow-hidden group shadow-xl relative">
+              <img 
+                src="https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&q=80" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100" 
+                alt="Strategic Planning" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="h-[60%] rounded-[3rem] overflow-hidden group shadow-2xl relative">
+              <img 
+                src="https://images.unsplash.com/photo-1512428559083-a40ce7ba6e91?auto=format&fit=crop&q=80" 
+                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100" 
+                alt="Mobile Innovation" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const OfficeMap = () => {
+  return (
+    <section className="relative py-48 bg-white overflow-hidden flex items-center justify-center" id="location">
+      {/* Schematic Dotted Map Background */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center">
+        <div className="absolute inset-0 opacity-[0.2]" 
+          style={{ 
+            backgroundImage: 'radial-gradient(#8B5CF6 1.5px, transparent 1.5px)', 
+            backgroundSize: '24px 24px' 
+          }} 
+        />
+        {/* World Map Shape Overlay - Semi Abstract */}
+        <div className="w-[80%] h-[60%] relative opacity-[0.4]">
+          <svg viewBox="0 0 1000 500" className="w-full h-full fill-[#8B5CF6]">
+             <path d="M150,150 Q200,100 250,150 T350,150 M450,120 Q500,80 550,120 T650,120 M750,130 Q800,100 850,130 T950,130 M100,300 Q150,250 200,300 T300,300 M400,350 Q450,300 500,350 T600,350 M700,320 Q750,280 800,320 T900,320" 
+                   stroke="#8B5CF6" strokeWidth="60" strokeLinecap="round" strokeDasharray="1 100" />
+             <path d="M200,200 Q250,150 300,200 T400,200 M500,170 Q550,130 600,170 T700,170 M800,180 Q850,150 900,180 T1000,180 M150,350 Q200,300 250,350 T350,350 M450,400 Q500,350 550,400 T650,400 M750,370 Q800,330 850,370 T950,370" 
+                   stroke="#8B5CF6" strokeWidth="60" strokeLinecap="round" strokeDasharray="1 80" opacity="0.5" />
+          </svg>
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+      </div>
+
+      <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="relative bg-white p-12 md:p-20 rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.06)] max-w-3xl border border-slate-100 group overflow-hidden"
+        >
+          {/* Vertical Gradient Bar */}
+          <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-b from-[#8B5CF6] via-[#A855F7] to-[#3ACBB1]" />
+          
+          <div className="space-y-12">
+            <h3 className="text-4xl font-black text-[#1A2B56] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#8B5CF6] group-hover:to-[#3ACBB1] transition-all duration-500">
+              Gibraltar Office
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
+              <div className="space-y-3">
+                <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Location</p>
+                <div className="text-[#1A2B56] font-extrabold text-xl leading-relaxed">
+                  Casemates Square, no253 <br />
+                  United kingdom
+                </div>
+              </div>
+              
+              <div className="space-y-8">
+                <div className="space-y-3">
+                  <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Direct Line</p>
+                  <p className="text-[#1A2B56] font-extrabold text-xl">+453678 9283 559</p>
+                </div>
+                <div className="space-y-3">
+                  <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Email Support</p>
+                  <p className="text-[#1A2B56] font-extrabold text-xl break-all">contact@template.com</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Decorative Corner Element */}
+          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#3ACBB1]/5 rounded-full blur-3xl" />
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
 const Footer = ({ onAction, setView }: { onAction: (m: string) => void, setView?: (v: any) => void }) => {
   return (
     <footer className="w-full bg-[#030712] pt-24 pb-12 px-6 lg:px-20 relative overflow-hidden">
@@ -2027,6 +2200,8 @@ export default function App() {
               <Process />
               <TeamSection />
               <ReadyToGrow onAction={showToast} />
+              <TeamFeatures />
+              <OfficeMap />
             </motion.div>
           ) : view === "journey" ? (
             <motion.div
