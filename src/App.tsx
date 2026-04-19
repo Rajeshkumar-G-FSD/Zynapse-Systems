@@ -52,25 +52,29 @@ import {
 import React, { useState, useEffect, useRef } from "react";
 
 const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string, openChat: () => void }) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  const menuItems = [
+    { name: 'HOME', section: 'hero' },
+    { name: 'ABOUT', section: 'services' },
+    { name: 'WE OFFER', section: 'services' },
+    { name: 'PORTFOLIO', section: 'process' },
+    { name: 'RECENT WORK', section: 'team' }
+  ];
+
   return (
-    <nav className="fixed top-0 w-full z-50 px-12 py-6 flex justify-between items-center bg-transparent backdrop-blur-[2px] border-b border-white/10">
+    <nav className="fixed top-0 w-full z-50 px-6 md:px-12 py-6 flex justify-between items-center bg-transparent backdrop-blur-[2px] border-b border-white/10">
       <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("main")}>
         <div className="relative group">
           <div className="w-10 h-10 bg-white rotate-45 flex items-center justify-center shadow-lg transition-transform group-hover:rotate-[135deg]">
             <div className="w-6 h-6 border-4 border-slate-900 -rotate-45"></div>
           </div>
         </div>
-        <div className="text-2xl font-black tracking-tight text-white uppercase italic">Zynapse</div>
+        <div className="text-xl md:text-2xl font-black tracking-tight text-white uppercase italic">Zynapse</div>
       </div>
 
       <div className="hidden lg:flex items-center gap-8">
-        {[
-          { name: 'HOME', section: 'hero' },
-          { name: 'ABOUT', section: 'services' },
-          { name: 'WE OFFER', section: 'services' },
-          { name: 'PORTFOLIO', section: 'process' },
-          { name: 'RECENT WORK', section: 'team' }
-        ].map((item) => (
+        {menuItems.map((item) => (
           <button 
             key={item.name}
             onClick={() => {
@@ -104,11 +108,78 @@ const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: st
         </button>
       </div>
 
-      <div className="lg:hidden">
-        <button className="text-white">
-          <ChevronDown className="w-6 h-6 rotate-90" />
+      <div className="lg:hidden flex items-center gap-4">
+        <button onClick={openChat} className="p-2 bg-[#3ACBB1] rounded-full text-black">
+          <Bot className="w-5 h-5" />
+        </button>
+        <button className="text-white p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+           {isMobileMenuOpen ? <div className="text-2xl font-black">×</div> : <ChevronDown className="w-6 h-6 rotate-90" />}
         </button>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div 
+            initial={{ x: "100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed inset-0 bg-[#1A2B56] z-[60] flex flex-col p-12 lg:hidden"
+          >
+            <div className="flex justify-between items-center mb-20">
+              <div className="text-2xl font-black text-white italic uppercase tracking-tighter">Zynapse</div>
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white text-2xl font-black"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-8">
+               {menuItems.map((item) => (
+                <button 
+                  key={item.name}
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    if (item.name === 'HOME') {
+                      setView("main");
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    } else {
+                      setView("main");
+                      setTimeout(() => {
+                        const element = document.getElementById(item.section);
+                        if (element) element.scrollIntoView({ behavior: 'smooth' });
+                      }, 100);
+                    }
+                  }}
+                  className="text-4xl font-black text-white/50 hover:text-[#3ACBB1] transition-all text-left uppercase tracking-tighter"
+                >
+                  {item.name}
+                </button>
+              ))}
+              
+              <div className="pt-12 mt-auto border-t border-white/10 flex flex-col gap-6">
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openChat();
+                  }}
+                  className="w-full py-6 bg-[#3ACBB1] text-black font-black uppercase tracking-widest text-xs rounded-2xl flex items-center justify-center gap-3"
+                >
+                  <Bot className="w-5 h-5" />
+                  Launch AI Assistant
+                </button>
+                <div className="text-center text-white/40 text-[10px] font-black uppercase tracking-widest leading-loose">
+                  Strategic Presence in Gibraltar <br />
+                  & Tamil Nadu, India
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </nav>
   );
 };
@@ -143,7 +214,7 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-none mb-8 drop-shadow-2xl"
+          className="text-5xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-none mb-8 drop-shadow-2xl"
         >
           BUILD YOUR DREAM
         </motion.h1>
@@ -155,8 +226,7 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-sm md:text-base text-white/90 font-medium max-w-2xl mb-12 leading-relaxed drop-shadow-md"
         >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp
-          or incididunt ut labore et dolore magna aliqua. Ut enim ad minim..
+          Zynapse architects the future of your digital identity. We combine enterprise-grade performance with bespoke design to deliver high-impact web and marketing solutions that scale with your ambitions.
         </motion.p>
 
         {/* CTA Button */}
@@ -470,7 +540,7 @@ const TeamSection = () => {
             <div className="overflow-hidden">
               <motion.div 
                 className="flex gap-6 shrink-0"
-                animate={{ x: -(currentIndex * 344) }}
+                animate={{ x: -(currentIndex * (window.innerWidth < 768 ? 304 : 344)) }}
                 transition={{ type: "spring", stiffness: 100, damping: 20 }}
               >
                 {/* Member Cards */}
@@ -478,7 +548,7 @@ const TeamSection = () => {
                   <motion.div 
                     key={member.id} 
                     onClick={() => setCurrentIndex(idx)}
-                    className={`min-w-[320px] h-[580px] rounded-[2rem] overflow-hidden relative group shrink-0 cursor-pointer transition-all duration-500 ${
+                    className={`min-w-[280px] md:min-w-[320px] h-[500px] md:h-[580px] rounded-[2rem] overflow-hidden relative group shrink-0 cursor-pointer transition-all duration-500 ${
                       currentIndex === idx ? 'ring-4 ring-[#3ACBB1] ring-offset-4 ring-offset-white' : 'opacity-60 hover:opacity-100'
                     }`}
                   >
@@ -1317,8 +1387,12 @@ const AIBotSection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
     setLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
-      const history = messages.map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+      const apiKey = (typeof process !== 'undefined' && process.env.GEMINI_API_KEY) || '';
+      const ai = new GoogleGenAI({ apiKey });
+      
+      // Filter history to start with a 'user' role and alternate correctly.
+      // Our state starts with a 'model' greeting which we skip for history logic.
+      const history = messages.slice(1).map(m => ({ role: m.role, parts: [{ text: m.text }] }));
       
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
@@ -1502,16 +1576,16 @@ const TeamFeatures = () => {
           </div>
           
           <p className="text-slate-500 font-medium leading-relaxed max-w-xl text-lg">
-            Cras ex mauris, ornare eget pretium sit amet, dignissim et turpis. Nunc nec maximus dui, vel suscipit dolor. Donec elementum velit a orci facilisis rutrum. Nam convallis vel erat id dictum. Sed ut risus in orci convallis viverra.
+            Our collective expertise drives excellence. We are a diverse group of strategists, developers, and designers united by a single mission: to build impactful digital experiences that empower businesses and delight users everywhere.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-12">
             {[
-              "Nunc nec maximus dui,",
-              "Aenean pellentesque elit vitae",
-              "Aenean pellentesque elit vitae",
-              "Ex mauris, ornare eget pretium",
-              "Cras ex mauris, ornare eget preti"
+              "Innovative Strategic Thinking",
+              "Precision Performance Engineering",
+              "User-Centric Experience Design",
+              "Data-Driven Marketing Growth",
+              "Agile Scalable Development"
             ].map((feature, i) => (
               <div key={i} className="flex items-center gap-4 group cursor-default">
                 <div className="w-2 h-2 rounded-full bg-[#3ACBB1] group-hover:scale-150 transition-transform duration-300" />
@@ -1553,7 +1627,7 @@ const TeamFeatures = () => {
             </div>
             <div className="h-[60%] rounded-[3rem] overflow-hidden group shadow-2xl relative">
               <img 
-                src="https://images.unsplash.com/photo-1512428559083-a40ce7ba6e91?auto=format&fit=crop&q=80" 
+                src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&q=80" 
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100" 
                 alt="Mobile Innovation" 
                 referrerPolicy="no-referrer"
@@ -1568,67 +1642,63 @@ const TeamFeatures = () => {
 
 const OfficeMap = () => {
   return (
-    <section className="relative py-48 bg-white overflow-hidden flex items-center justify-center" id="location">
-      {/* Schematic Dotted Map Background */}
-      <div className="absolute inset-0 z-0 flex items-center justify-center">
-        <div className="absolute inset-0 opacity-[0.2]" 
-          style={{ 
-            backgroundImage: 'radial-gradient(#8B5CF6 1.5px, transparent 1.5px)', 
-            backgroundSize: '24px 24px' 
-          }} 
+    <section className="relative py-48 bg-[#050505] overflow-hidden flex items-center justify-center min-h-[800px]" id="location">
+      {/* Cinematic Background Image - Gibraltar View */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://picsum.photos/seed/gibraltar-hq/1920/1080?blur=2" 
+          alt="Gibraltar Office Background" 
+          className="w-full h-full object-cover opacity-40 grayscale"
+          referrerPolicy="no-referrer"
         />
-        {/* World Map Shape Overlay - Semi Abstract */}
-        <div className="w-[80%] h-[60%] relative opacity-[0.4]">
-          <svg viewBox="0 0 1000 500" className="w-full h-full fill-[#8B5CF6]">
-             <path d="M150,150 Q200,100 250,150 T350,150 M450,120 Q500,80 550,120 T650,120 M750,130 Q800,100 850,130 T950,130 M100,300 Q150,250 200,300 T300,300 M400,350 Q450,300 500,350 T600,350 M700,320 Q750,280 800,320 T900,320" 
-                   stroke="#8B5CF6" strokeWidth="60" strokeLinecap="round" strokeDasharray="1 100" />
-             <path d="M200,200 Q250,150 300,200 T400,200 M500,170 Q550,130 600,170 T700,170 M800,180 Q850,150 900,180 T1000,180 M150,350 Q200,300 250,350 T350,350 M450,400 Q500,350 550,400 T650,400 M750,370 Q800,330 850,370 T950,370" 
-                   stroke="#8B5CF6" strokeWidth="60" strokeLinecap="round" strokeDasharray="1 80" opacity="0.5" />
-          </svg>
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-white" />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#050505] via-transparent to-[#050505]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#050505] via-transparent to-[#050505]" />
       </div>
 
       <div className="max-w-7xl mx-auto w-full px-6 relative z-10">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="relative bg-white p-12 md:p-20 rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.06)] max-w-3xl border border-slate-100 group overflow-hidden"
+          className="relative bg-white p-8 md:p-20 rounded-[2.5rem] md:rounded-[3rem] shadow-[0_50px_100px_rgba(0,0,0,0.5)] max-w-3xl border border-white/10 group overflow-hidden"
         >
-          {/* Vertical Gradient Bar */}
-          <div className="absolute left-0 top-0 bottom-0 w-2.5 bg-gradient-to-b from-[#8B5CF6] via-[#A855F7] to-[#3ACBB1]" />
+          {/* Vertical Color Rail */}
+          <div className="absolute left-0 top-0 bottom-0 w-3 bg-gradient-to-b from-[#3ACBB1] via-[#1A2B56] to-[#8B5CF6]" />
           
           <div className="space-y-12">
-            <h3 className="text-4xl font-black text-[#1A2B56] group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-[#8B5CF6] group-hover:to-[#3ACBB1] transition-all duration-500">
-              Gibraltar Office
-            </h3>
+            <div>
+              <p className="text-[#3ACBB1] font-black uppercase text-[10px] tracking-[0.4em] mb-4">Strategic Presence</p>
+              <h3 className="text-4xl md:text-6xl font-black text-[#1A2B56] leading-none tracking-tighter">
+                Gibraltar Office
+              </h3>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-              <div className="space-y-3">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
+              <div className="space-y-4">
                 <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Location</p>
                 <div className="text-[#1A2B56] font-extrabold text-xl leading-relaxed">
                   Casemates Square, no253 <br />
-                  United kingdom
+                  United Kingdom
                 </div>
               </div>
               
               <div className="space-y-8">
                 <div className="space-y-3">
                   <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Direct Line</p>
-                  <p className="text-[#1A2B56] font-extrabold text-xl">+453678 9283 559</p>
+                  <p className="text-[#1A2B56] font-extrabold text-xl font-mono tracking-tight">+453678 9283 559</p>
                 </div>
                 <div className="space-y-3">
                   <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Email Support</p>
-                  <p className="text-[#1A2B56] font-extrabold text-xl break-all">intelligence@zynapse.io</p>
+                  <p className="text-[#1A2B56] font-black text-xl break-all">intelligence@zynapse.io</p>
                 </div>
               </div>
             </div>
           </div>
           
-          {/* Decorative Corner Element */}
-          <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#3ACBB1]/5 rounded-full blur-3xl" />
+          {/* Decorative Elements */}
+          <div className="absolute top-10 right-10 opacity-[0.05] group-hover:opacity-[0.15] transition-all duration-700 -rotate-12 group-hover:rotate-0">
+             <Globe className="w-48 h-48 text-[#1A2B56]" />
+          </div>
         </motion.div>
       </div>
     </section>
@@ -1744,7 +1814,7 @@ const Footer = ({ onAction, setView, openChat }: { onAction: (m: string) => void
               <div className="pt-8 border-t border-white/5 space-y-4">
                 <div className="flex items-center gap-4 text-slate-400">
                   <Mail className="w-4 h-4 text-[#3ACBB1]" />
-                  <span className="text-xs font-bold">zynapse@gmail.com</span>
+                  <span className="text-xs font-bold">intelligence@zynapse.io</span>
                 </div>
                 <div className="flex items-center gap-4 text-slate-400">
                   <Phone className="w-4 h-4 text-[#3ACBB1]" />
@@ -1859,13 +1929,13 @@ const ProcessJourneyView = () => {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex items-center gap-8 md:gap-12"
+            className="flex flex-col md:flex-row items-center gap-8 md:gap-12"
           >
-            <div className="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-full border-2 border-[#3ACBB1] flex items-center justify-center text-[#3ACBB1] text-2xl font-black shadow-[0_10px_30px_rgba(58,203,177,0.1)]">
+            <div className="flex-shrink-0 w-20 h-20 rounded-full border-2 border-[#3ACBB1] flex items-center justify-center text-[#3ACBB1] text-2xl font-black shadow-[0_10px_30px_rgba(58,203,177,0.1)]">
               {step.id}
             </div>
             
-            <div className="flex-grow p-8 md:p-12 rounded-[2.5rem] border-2 border-[#3ACBB1]/20 bg-white shadow-xl shadow-slate-100/50 hover:border-[#3ACBB1] transition-all duration-500 group">
+            <div className="flex-grow p-8 md:p-12 rounded-[2.5rem] border-2 border-[#3ACBB1]/20 bg-white shadow-xl shadow-slate-100/50 hover:border-[#3ACBB1] transition-all duration-500 group text-center md:text-left">
               <h3 className="text-2xl md:text-3xl font-black text-[#1A2B56] mb-4 group-hover:text-[#3ACBB1] transition-colors">
                 {step.title}
               </h3>
@@ -1929,18 +1999,18 @@ const RefundPolicyView = () => {
         <div className="prose prose-slate max-w-none space-y-12">
           <section>
             <p className="text-lg text-slate-600 leading-relaxed font-medium">
-              At Tamilnadu Digital, we prioritize customer satisfaction and are committed to delivering the best possible web solutions. However, in situations where a client is dissatisfied, we have outlined a transparent and fair Refund & Cancellation Policy.
+              At Zynapse, we prioritize customer satisfaction and are committed to delivering the best possible web solutions. However, in situations where a client is dissatisfied, we have outlined a transparent and fair Refund & Cancellation Policy.
             </p>
           </section>
 
-          <section className="bg-slate-50 p-10 rounded-[2.5rem] border border-slate-100">
+          <section className="bg-slate-50 p-6 md:p-10 rounded-[2.5rem] border border-slate-100">
             <h3 className="text-2xl font-black text-[#1A2B56] mb-6 flex items-center gap-3">
               <span className="w-2 h-8 bg-[#3ACBB1] rounded-full" />
               Cancellation Policy
             </h3>
             <p className="text-slate-600 mb-6 font-medium">If a client wishes to cancel an ongoing project or service, they must send an official request to:</p>
-            <div className="bg-[#1A2B56] p-6 rounded-2xl inline-block mb-6">
-              <p className="text-[#3ACBB1] font-black tracking-widest text-lg">📧 intelligence@zynapse.io</p>
+            <div className="bg-[#1A2B56] p-6 rounded-2xl inline-block mb-6 max-w-full overflow-hidden">
+              <p className="text-[#3ACBB1] font-black tracking-widest text-base md:text-lg break-all">📧 intelligence@zynapse.io</p>
             </div>
             <div className="flex items-start gap-4 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-bold mb-6">
               <span className="text-xl">⚠️</span>
@@ -1953,8 +2023,8 @@ const RefundPolicyView = () => {
 
           <section>
             <h3 className="text-2xl font-black text-[#1A2B56] mb-8">Refund Eligibility Table</h3>
-            <div className="overflow-hidden rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50">
-              <table className="w-full text-left border-collapse">
+            <div className="overflow-x-auto rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50">
+              <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
                   <tr className="bg-[#1A2B56] text-white">
                     <th className="px-8 py-6 font-black uppercase tracking-widest text-xs">Reason</th>
@@ -2001,8 +2071,8 @@ const RefundPolicyView = () => {
             </div>
           </section>
 
-          <section className="bg-[#3ACBB1] p-12 rounded-[3rem] text-white">
-            <h3 className="text-3xl font-black mb-6">How to Request a Refund</h3>
+          <section className="bg-[#3ACBB1] p-8 md:p-12 rounded-[3rem] text-white">
+            <h3 className="text-2xl md:text-3xl font-black mb-6">How to Request a Refund</h3>
             <p className="font-bold mb-8 text-white/90">Email us at intelligence@zynapse.io include your reason, service name, and payment details.</p>
             <div className="flex flex-wrap gap-4">
               <span className="px-4 py-2 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">Original Source Only</span>
@@ -2037,7 +2107,7 @@ const PrivacyPolicyView = () => {
         <div className="prose prose-slate max-w-none space-y-12">
           <section>
             <p className="text-lg text-slate-600 leading-relaxed font-medium">
-              Introduction: This Privacy Policy (“Policy”) explains the privacy practices of Tamilnadu Digital regarding the collection, use, and sharing of your personal and organizational data.
+              Introduction: This Privacy Policy (“Policy”) explains the privacy practices of Zynapse regarding the collection, use, and sharing of your personal and organizational data.
             </p>
           </section>
 
@@ -2084,18 +2154,18 @@ const PrivacyPolicyView = () => {
             </div>
           </section>
 
-          <section className="bg-slate-50 p-12 rounded-[3.5rem] border border-slate-100 shadow-inner">
+          <section className="bg-slate-50 p-8 md:p-12 rounded-[3.5rem] border border-slate-100 shadow-inner">
             <h3 className="text-2xl font-black text-[#1A2B56] mb-6">Data Security & Trust</h3>
             <p className="text-slate-600 leading-relaxed font-medium mb-8">
-              We implement a combination of physical, electronic, and administrative procedures to safeguard the information we collect. Tamilnadu Digital never sells or shares your information with third parties without your explicit consent.
+              We implement a combination of physical, electronic, and administrative procedures to safeguard the information we collect. Zynapse never sells or shares your information with third parties without your explicit consent.
             </p>
-            <div className="flex items-center gap-4 p-6 bg-white rounded-3xl border border-slate-200">
-               <div className="w-12 h-12 bg-[#3ACBB1]/10 rounded-2xl flex items-center justify-center text-[#3ACBB1]">
-                 <AtSign className="w-6 h-6" />
+            <div className="flex items-center gap-4 p-4 md:p-6 bg-white rounded-3xl border border-slate-200 overflow-hidden">
+               <div className="w-10 h-10 md:w-12 md:h-12 bg-[#3ACBB1]/10 rounded-xl md:rounded-2xl flex items-center justify-center text-[#3ACBB1] shrink-0">
+                 <AtSign className="w-5 h-5 md:w-6 md:h-6" />
                </div>
-               <div>
+               <div className="overflow-hidden">
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inquiries</p>
-                 <p className="text-[#1A2B56] font-black">intelligence@zynapse.io</p>
+                 <p className="text-[#1A2B56] font-black break-all text-sm md:text-base">intelligence@zynapse.io</p>
                </div>
             </div>
           </section>
