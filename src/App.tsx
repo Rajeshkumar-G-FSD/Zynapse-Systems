@@ -49,9 +49,9 @@ import {
   Loader2,
   Bot
 } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string }) => {
+const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string, openChat: () => void }) => {
   return (
     <nav className="fixed top-0 w-full z-50 px-12 py-6 flex justify-between items-center bg-transparent backdrop-blur-[2px] border-b border-white/10">
       <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("main")}>
@@ -96,13 +96,7 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
 
         {/* AI CHAT BOT Button */}
         <button 
-          onClick={() => {
-            setView("main");
-            setTimeout(() => {
-              const element = document.getElementById('ai-bot');
-              if (element) element.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-          }}
+          onClick={openChat}
           className="ml-4 px-6 py-3 bg-[#3ACBB1] text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white transition-all shadow-xl shadow-[#3ACBB1]/20 flex items-center gap-2 group"
         >
           <Bot className="w-3.5 h-3.5" />
@@ -1055,7 +1049,7 @@ const Expertise = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
-const Pricing = ({ onAction }: { onAction: (m: string) => void }) => {
+const Pricing = ({ onAction, openChat }: { onAction: (m: string) => void, openChat?: () => void }) => {
   return (
     <section className="py-32 bg-white px-6 lg:px-20" id="packages">
       <div className="text-center mb-20">
@@ -1108,7 +1102,7 @@ const Pricing = ({ onAction }: { onAction: (m: string) => void }) => {
             <p className="text-black/70 text-sm mb-12 font-bold leading-relaxed">Full-scale digital transformation including legacy migration and custom AI model training.</p>
           </div>
           <button 
-            onClick={() => onAction("Enterprise inquiry sent. Our team will contact you.")}
+            onClick={() => openChat ? openChat() : onAction("Enterprise inquiry sent. Our team will contact you.")}
             className="w-full py-5 rounded-full brutal-border font-black uppercase text-xs tracking-widest hover:bg-accent transition-all"
           >
             Get Quote
@@ -1298,13 +1292,20 @@ const Careers = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
-const AIBotSection = () => {
+const AIBotSection = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
   const [messages, setMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([
-    { role: 'model', text: 'Hello! I am Zynapse AI. How can I help you grow your business today?' }
+    { role: 'model', text: 'Hello! I am Zynapse AI. How can I help you grow your business today? Ask me about our web development, SEO, or digital marketing services.' }
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const scrollRef = useState<HTMLDivElement | null>(null);
+  const scrollBodyRef = useRef<HTMLDivElement>(null);
+
+  // Auto-scroll to bottom of chat
+  useEffect(() => {
+    if (scrollBodyRef.current) {
+      scrollBodyRef.current.scrollTop = scrollBodyRef.current.scrollHeight;
+    }
+  }, [messages, loading]);
 
   const handleSend = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -1321,89 +1322,95 @@ const AIBotSection = () => {
       
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: [...history, { role: 'user', parts: [{ text: input }] }],
+        contents: [...history, { role: 'user', parts: [{ text: userMessage.text }] }],
         config: {
-          systemInstruction: "You are Zynapse AI, the intelligent assistant for Zynapse, a premier digital agency in Tamil Nadu. Zynapse offers Website Development, E-commerce stores (WooCommerce, Shopify), Digital Marketing (Meta/Google Ads), Social Media Management (Instagram, Facebook), SEO (Local SEO, GMB), and Graphic/Brand Design. Our process involves Discovery, Strategic Planning, Creative Execution, and Launch/Scale. We are based in Chennai. Be professional, forward-thinking, helpful, and concise. Address all questions about Zynapse precisely. If asked about contact, provide intelligence@zynapse.io."
+          systemInstruction: `You are Zynapse AI, the intelligent assistant for Zynapse, a premier digital agency in Tamil Nadu. 
+          Zynapse Services:
+          - Website Development: High-performance, responsive sites.
+          - E-commerce: Custom stores using WooCommerce and Shopify.
+          - Digital Marketing: Data-driven Meta and Google Ads strategy.
+          - Social Media Management: Expert growth for Instagram and Facebook.
+          - SEO: Dominating Local SEO and GMB results.
+          - Brand Design: Logo and identity systems.
+
+          Our Process:
+          1. Discovery & Research
+          2. Strategy & Wireframing
+          3. Design & Development
+          4. Quality Assurance
+          5. Launch & Maintenance
+
+          Location: Chennai, India.
+          Contact: intelligence@zynapse.io | Phone: +91 8072117912
+
+          Behavior: 
+          - Be professional, highly intelligent, and helpful.
+          - Keep answers concise but valuable.
+          - If asked about "pricing", explain that we provide custom quotes based on project requirements.
+          - Always mention that we are focused on business growth and ROI.`
         }
       });
       
-      const modelMessage = { role: 'model' as const, text: response.text || 'I encountered an issue. Please try again.' };
+      const modelMessage = { role: 'model' as const, text: response.text || 'I am processing that. Could you rephrase your question?' };
       setMessages(prev => [...prev, modelMessage]);
     } catch (error) {
       console.error(error);
-      setMessages(prev => [...prev, { role: 'model', text: 'Sorry, I am having trouble connecting right now.' }]);
+      setMessages(prev => [...prev, { role: 'model', text: 'I encountered an issue connecting to my brain. Please check your connection and try again!' }]);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <section id="ai-bot" className="py-32 bg-[#050505] px-6 lg:px-20 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
-        style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
-      />
-      
-      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
-        <div className="space-y-8">
+    <AnimatePresence>
+      {isOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+          {/* Backdrop */}
           <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[#3ACBB1]/30 bg-[#3ACBB1]/5"
-          >
-            <Bot className="w-4 h-4 text-[#3ACBB1]" />
-            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#3ACBB1]">Next-Gen Intelligence</span>
-          </motion.div>
-          
-          <h2 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tighter uppercase grayscale brightness-[2]">
-            Talk to <br />
-            <span className="text-[#3ACBB1]">Zynapse AI</span>
-          </h2>
-          
-          <p className="text-slate-400 font-medium leading-relaxed max-w-md text-lg">
-            Stop filling forms. Start a conversation. Our AI assistant is trained on our entire ecosystem to provide instant intelligence on how we can scale your business.
-          </p>
-          
-          <div className="flex flex-wrap gap-4 pt-4">
-            {[
-              "How to build a website?",
-              "What is your SEO process?",
-              "Digital Marketing ROIs",
-              "Pricing & Packages"
-            ].map((tag, i) => (
-              <button 
-                key={i}
-                onClick={() => setInput(tag)}
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-slate-300 hover:bg-[#3ACBB1] hover:text-black hover:border-transparent transition-all"
-              >
-                {tag}
-              </button>
-            ))}
-          </div>
-        </div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+          />
 
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-[#3ACBB1]/20 blur-[100px] -z-10" />
-          
-          <div className="bg-[#111] rounded-[3.5rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col h-[600px]">
-            {/* Bot Header */}
-            <div className="p-8 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
-               <div className="flex items-center gap-4">
-                 <div className="w-12 h-12 bg-[#3ACBB1] rounded-2xl flex items-center justify-center text-black">
-                   <Bot className="w-6 h-6" />
-                 </div>
-                 <div>
-                   <p className="text-white font-black text-sm uppercase tracking-widest">Zynapse AI v2.4</p>
-                   <p className="text-[#3ACBB1] text-[10px] font-bold flex items-center gap-1.5">
-                     <span className="w-1.5 h-1.5 rounded-full bg-[#3ACBB1] animate-pulse" />
-                     Online & Ready
-                   </p>
-                 </div>
-               </div>
+          {/* Chat Window */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="relative w-full max-w-2xl bg-[#0F1115] rounded-[2.5rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col h-[80vh] md:h-[650px]"
+          >
+            {/* Header */}
+            <div className="p-6 md:p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-[#3ACBB1] to-[#1A2B56] rounded-2xl flex items-center justify-center text-white shadow-lg">
+                  <Bot className="w-6 h-6" />
+                </div>
+                <div>
+                  <h3 className="text-white font-black text-sm uppercase tracking-widest leading-none mb-1">Zynapse Intelligence</h3>
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#3ACBB1] animate-pulse" />
+                    <span className="text-[#3ACBB1] text-[10px] font-black uppercase tracking-tighter">System Online</span>
+                  </div>
+                </div>
+              </div>
+              <button 
+                onClick={onClose}
+                className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-white transition-all group"
+              >
+                <div className="relative w-4 h-4">
+                  <div className="absolute inset-0 border-2 border-white/30 rounded-sm group-hover:border-white transition-colors" />
+                  <div className="absolute inset-0 flex items-center justify-center text-[10px] font-black">X</div>
+                </div>
+              </button>
             </div>
 
             {/* Chat Body */}
-            <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-thin scrollbar-thumb-white/10">
+            <div 
+              ref={scrollBodyRef}
+              className="flex-1 overflow-y-auto p-6 md:p-8 space-y-6 scrollbar-thin scrollbar-thumb-white/10"
+            >
               {messages.map((msg, i) => (
                 <motion.div 
                   key={i}
@@ -1411,7 +1418,7 @@ const AIBotSection = () => {
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[85%] p-5 rounded-3xl font-medium text-sm leading-relaxed ${
+                  <div className={`max-w-[85%] p-4 md:p-5 rounded-3xl font-medium text-sm leading-relaxed ${
                     msg.role === 'user' 
                       ? 'bg-[#3ACBB1] text-black rounded-tr-none' 
                       : 'bg-white/5 border border-white/10 text-white rounded-tl-none'
@@ -1424,18 +1431,37 @@ const AIBotSection = () => {
                 <div className="flex justify-start">
                   <div className="bg-white/5 border border-white/10 p-5 rounded-3xl rounded-tl-none flex items-center gap-3">
                     <Loader2 className="w-4 h-4 text-[#3ACBB1] animate-spin" />
-                    <span className="text-xs font-bold text-slate-400">Analysing request...</span>
+                    <span className="text-xs font-bold text-slate-400">Processing intelligence...</span>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Input Area */}
-            <form onSubmit={handleSend} className="p-6 bg-white/[0.02] border-t border-white/5 flex gap-4">
+            {/* Suggestions */}
+            <div className="px-6 md:px-8 pb-4 flex flex-nowrap gap-3 overflow-x-auto scrollbar-none">
+              {[
+                "Web Development Inquiry",
+                "SEO Services",
+                "Digital Marketing ROI",
+                "Request a Quote"
+              ].map((s, i) => (
+                <button 
+                  key={i}
+                  onClick={() => setInput(s)}
+                  className="whitespace-nowrap px-4 py-2 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/50 hover:bg-[#3ACBB1] hover:text-black hover:border-transparent transition-all uppercase tracking-widest"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+
+            {/* Input */}
+            <form onSubmit={handleSend} className="p-6 md:p-8 bg-white/[0.02] border-t border-white/5 flex gap-4">
               <input 
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask anything about Zynapse..."
+                autoFocus
+                placeholder="Ask about our services..."
                 className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#3ACBB1]/50 text-white placeholder:text-white/20"
               />
               <button 
@@ -1443,13 +1469,13 @@ const AIBotSection = () => {
                 disabled={loading}
                 className="bg-[#3ACBB1] hover:bg-[#32b099] disabled:opacity-50 text-black w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-[#3ACBB1]/20 shrink-0"
               >
-                <Send className="w-5 h-5" />
+                <ArrowRight className="w-5 h-5" />
               </button>
             </form>
-          </div>
+          </motion.div>
         </div>
-      </div>
-    </section>
+      )}
+    </AnimatePresence>
   );
 };
 
@@ -1609,7 +1635,7 @@ const OfficeMap = () => {
   );
 };
 
-const Footer = ({ onAction, setView }: { onAction: (m: string) => void, setView?: (v: any) => void }) => {
+const Footer = ({ onAction, setView, openChat }: { onAction: (m: string) => void, setView?: (v: any) => void, openChat?: () => void }) => {
   return (
     <footer className="w-full bg-[#030712] pt-24 pb-12 px-6 lg:px-20 relative overflow-hidden">
       {/* Grid Pattern Background */}
@@ -1703,7 +1729,8 @@ const Footer = ({ onAction, setView }: { onAction: (m: string) => void, setView?
 
               <button 
                 onClick={() => {
-                  if (setView) {
+                  if (openChat) openChat();
+                  else if (setView) {
                     setView("main");
                     setTimeout(() => document.getElementById('ai-bot')?.scrollIntoView({ behavior: 'smooth' }), 100);
                   }
@@ -2082,6 +2109,7 @@ export default function App() {
   const [view, setView] = useState<"main" | "journey" | "refund" | "privacy">("main");
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState<{ message: string; visible: boolean }>({ message: "", visible: false });
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   const handleSetView = (newView: "main" | "journey" | "refund" | "privacy") => {
     setLoading(true);
@@ -2102,7 +2130,12 @@ export default function App() {
       <AnimatePresence>
         {loading && <Loader />}
       </AnimatePresence>
-      <Navbar onAction={showToast} setView={handleSetView} currentView={view} />
+      <Navbar 
+        onAction={showToast} 
+        setView={handleSetView} 
+        currentView={view} 
+        openChat={() => setIsChatOpen(true)}
+      />
       <main>
         <AnimatePresence mode="wait">
           {view === "main" ? (
@@ -2117,7 +2150,6 @@ export default function App() {
               <CoreServices onAction={showToast} />
               <Process />
               <TeamSection />
-              <AIBotSection />
               <TeamFeatures />
               <OfficeMap />
             </motion.div>
@@ -2154,7 +2186,17 @@ export default function App() {
           ) : null}
         </AnimatePresence>
       </main>
-      <Footer onAction={showToast} setView={handleSetView} />
+      <Footer 
+        onAction={showToast} 
+        setView={handleSetView} 
+        openChat={() => setIsChatOpen(true)}
+      />
+
+      {/* AI Bot Window Overlay */}
+      <AIBotSection 
+        isOpen={isChatOpen} 
+        onClose={() => setIsChatOpen(false)} 
+      />
 
       {/* Persistent Floating Interaction Buttons */}
       <div className="fixed bottom-8 left-8 right-8 pointer-events-none z-[100] flex justify-between items-end">
@@ -2174,16 +2216,13 @@ export default function App() {
           <span className="absolute -top-12 left-0 bg-black text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">WhatsApp Us</span>
         </motion.a>
 
-        {/* AI Bot Integration (Right) - Scroll Trigger */}
+        {/* AI Bot Integration (Right) - Overlay Trigger */}
         <motion.button
           initial={{ opacity: 0, x: 20, scale: 0.8 }}
           animate={{ opacity: 1, x: 0, scale: 1 }}
           whileHover={{ scale: 1.1, y: -5 }}
           whileTap={{ scale: 0.9 }}
-          onClick={() => {
-            const element = document.getElementById('ai-bot');
-            if (element) element.scrollIntoView({ behavior: 'smooth' });
-          }}
+          onClick={() => setIsChatOpen(true)}
           className="pointer-events-auto w-16 h-16 bg-[#3ACBB1] text-black rounded-2xl flex items-center justify-center shadow-[0_20px_40px_rgba(58,203,177,0.3)] group hover:shadow-[0_25px_50px_rgba(58,203,177,0.4)] transition-all relative overflow-hidden"
         >
           <div className="absolute inset-0 bg-white/30 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
