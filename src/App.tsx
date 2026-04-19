@@ -101,21 +101,9 @@ const Navbar = ({ onAction, setView, currentView, openChat }: { onAction: (m: st
         <div className="flex items-center gap-1 text-[11px] font-black tracking-[0.25em] text-white/80 cursor-pointer hover:text-white transition-all">
           PAGES <ChevronDown className="w-3 h-3" />
         </div>
-
-        {/* AI CHAT BOT Button */}
-        <button 
-          onClick={openChat}
-          className="ml-4 px-6 py-3 bg-[#3ACBB1] text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white transition-all shadow-xl shadow-[#3ACBB1]/20 flex items-center gap-2 group"
-        >
-          <Bot className="w-3.5 h-3.5" />
-          AI CHAT BOT
-        </button>
       </div>
 
       <div className="lg:hidden flex items-center gap-4">
-        <button onClick={openChat} className="p-2 bg-[#3ACBB1] rounded-full text-black">
-          <Bot className="w-5 h-5" />
-        </button>
         <button className="text-white p-2" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
            {isMobileMenuOpen ? <div className="text-2xl font-black">×</div> : <ChevronDown className="w-6 h-6 rotate-90" />}
         </button>
