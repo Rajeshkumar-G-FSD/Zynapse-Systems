@@ -4,6 +4,7 @@
  */
 
 import { motion, AnimatePresence } from "motion/react";
+import { GoogleGenAI } from "@google/genai";
 import { 
   LayoutDashboard, 
   Cpu, 
@@ -43,9 +44,12 @@ import {
   Linkedin,
   Twitter,
   Youtube,
-  Instagram
+  Instagram,
+  Send,
+  Loader2,
+  Bot
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string }) => {
   return (
@@ -65,8 +69,7 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
           { name: 'ABOUT', section: 'services' },
           { name: 'WE OFFER', section: 'services' },
           { name: 'PORTFOLIO', section: 'process' },
-          { name: 'RECENT WORK', section: 'team' },
-          { name: 'CONTACT', section: 'contact' }
+          { name: 'RECENT WORK', section: 'team' }
         ].map((item) => (
           <button 
             key={item.name}
@@ -90,6 +93,21 @@ const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => v
         <div className="flex items-center gap-1 text-[11px] font-black tracking-[0.25em] text-white/80 cursor-pointer hover:text-white transition-all">
           PAGES <ChevronDown className="w-3 h-3" />
         </div>
+
+        {/* AI CHAT BOT Button */}
+        <button 
+          onClick={() => {
+            setView("main");
+            setTimeout(() => {
+              const element = document.getElementById('ai-bot');
+              if (element) element.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+          }}
+          className="ml-4 px-6 py-3 bg-[#3ACBB1] text-black text-[10px] font-black uppercase tracking-[0.2em] rounded-full hover:bg-white transition-all shadow-xl shadow-[#3ACBB1]/20 flex items-center gap-2 group"
+        >
+          <Bot className="w-3.5 h-3.5" />
+          AI CHAT BOT
+        </button>
       </div>
 
       <div className="lg:hidden">
@@ -188,16 +206,6 @@ const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
         ))}
       </motion.div>
 
-      {/* Floating Contact Bubble */}
-      <motion.div 
-        whileHover={{ scale: 1.05, y: -5 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => onAction("Opening contact form...")}
-        className="fixed bottom-8 right-8 z-50 bg-[#3ACBB1] text-white px-8 py-5 rounded-2xl flex items-center gap-3 shadow-[0_20px_50px_rgba(58,203,177,0.3)] cursor-pointer hover:bg-[#2CA08A] transition-all brutal-border border-white/20"
-      >
-        <Mail className="w-6 h-6" />
-        <span className="font-black uppercase tracking-[0.2em] text-[12px]">Contact us</span>
-      </motion.div>
     </section>
   );
 };
@@ -1290,92 +1298,155 @@ const Careers = ({ onAction }: { onAction: (m: string) => void }) => {
   );
 };
 
-const Contact = ({ onAction }: { onAction: (m: string) => void }) => {
+const AIBotSection = () => {
+  const [messages, setMessages] = useState<{ role: 'user' | 'model'; text: string }[]>([
+    { role: 'model', text: 'Hello! I am Zynapse AI. How can I help you grow your business today?' }
+  ]);
+  const [input, setInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const scrollRef = useState<HTMLDivElement | null>(null);
+
+  const handleSend = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    if (!input.trim() || loading) return;
+    
+    const userMessage = { role: 'user' as const, text: input };
+    setMessages(prev => [...prev, userMessage]);
+    setInput('');
+    setLoading(true);
+
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const history = messages.map(m => ({ role: m.role, parts: [{ text: m.text }] }));
+      
+      const response = await ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: [...history, { role: 'user', parts: [{ text: input }] }],
+        config: {
+          systemInstruction: "You are Zynapse AI, the intelligent assistant for Zynapse, a premier digital agency in Tamil Nadu. Zynapse offers Website Development, E-commerce stores (WooCommerce, Shopify), Digital Marketing (Meta/Google Ads), Social Media Management (Instagram, Facebook), SEO (Local SEO, GMB), and Graphic/Brand Design. Our process involves Discovery, Strategic Planning, Creative Execution, and Launch/Scale. We are based in Chennai. Be professional, forward-thinking, helpful, and concise. Address all questions about Zynapse precisely. If asked about contact, provide intelligence@zynapse.io."
+        }
+      });
+      
+      const modelMessage = { role: 'model' as const, text: response.text || 'I encountered an issue. Please try again.' };
+      setMessages(prev => [...prev, modelMessage]);
+    } catch (error) {
+      console.error(error);
+      setMessages(prev => [...prev, { role: 'model', text: 'Sorry, I am having trouble connecting right now.' }]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <section className="py-32 bg-surface-container-low px-6 lg:px-20" id="contact">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-20">
-        <div className="space-y-12">
-          <h3 className="text-5xl md:text-8xl font-black tracking-tighter uppercase text-black">
-            Ready to <br/><span className="accent-text-stroke">Scale?</span>
-          </h3>
-          <div className="space-y-8">
-            <div className="flex items-start gap-6">
-              <div className="bg-accent p-3 brutal-border">
-                <MapPin className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h5 className="font-black uppercase tracking-[0.4em] text-[10px] mb-1 text-black">Global HQ</h5>
-                <p className="text-black/70 font-mono text-sm font-bold">Chennai, India — The Silicon Coast</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-6">
-              <div className="bg-accent p-3 brutal-border">
-                <Mail className="w-6 h-6 text-black" />
-              </div>
-              <div>
-                <h5 className="font-black uppercase tracking-[0.4em] text-[10px] mb-1 text-black">Email Inquiry</h5>
-                <p className="text-black/70 font-mono text-sm font-bold">intelligence@zynapse.io</p>
-              </div>
-            </div>
-          </div>
-          <div className="h-64 brutal-border overflow-hidden grayscale yellow-glow">
-            <img 
-              className="w-full h-full object-cover opacity-50" 
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjkeouyzaCVR3NvYYadH0mLtLOUytic3n5naS5sYf1lzXWHH29p9jaHYB_jWHTWbq9c5W9YJLj7o0tNOQns7l8QVC4RNx1cRrhGKQXWivynVMTNQ-emPhVt7RwJOcRkFAmE5QxaMaChQuIJYrQcg6fFiKkcmjzPOLdDXbJQylF2zu1pQD6EGP0EF7R0vZJtinBXoy4zx21a3ESLmQEncPyf2JvNVNVV-zoo0qlxgoaKoaa3dZb9npH9cAR8y5HfbeLesrQwGfvclDx" 
-              referrerPolicy="no-referrer"
-            />
-          </div>
-          <a 
-            className="inline-flex items-center gap-4 px-10 py-5 bg-accent text-black brutal-border font-black uppercase text-xs tracking-widest yellow-glow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all" 
-            href="#"
-            onClick={(e) => {
-              e.preventDefault();
-              onAction("Opening WhatsApp chat...");
-            }}
+    <section id="ai-bot" className="py-32 bg-[#050505] px-6 lg:px-20 relative overflow-hidden">
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+        style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }} 
+      />
+      
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+        <div className="space-y-8">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-[#3ACBB1]/30 bg-[#3ACBB1]/5"
           >
-            <MessageSquare className="w-4 h-4" />
-            WhatsApp Quote
-          </a>
+            <Bot className="w-4 h-4 text-[#3ACBB1]" />
+            <span className="text-[10px] font-black tracking-[0.3em] uppercase text-[#3ACBB1]">Next-Gen Intelligence</span>
+          </motion.div>
+          
+          <h2 className="text-5xl md:text-7xl font-black text-white leading-tight tracking-tighter uppercase grayscale brightness-[2]">
+            Talk to <br />
+            <span className="text-[#3ACBB1]">Zynapse AI</span>
+          </h2>
+          
+          <p className="text-slate-400 font-medium leading-relaxed max-w-md text-lg">
+            Stop filling forms. Start a conversation. Our AI assistant is trained on our entire ecosystem to provide instant intelligence on how we can scale your business.
+          </p>
+          
+          <div className="flex flex-wrap gap-4 pt-4">
+            {[
+              "How to build a website?",
+              "What is your SEO process?",
+              "Digital Marketing ROIs",
+              "Pricing & Packages"
+            ].map((tag, i) => (
+              <button 
+                key={i}
+                onClick={() => setInput(tag)}
+                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-bold text-slate-300 hover:bg-[#3ACBB1] hover:text-black hover:border-transparent transition-all"
+              >
+                {tag}
+              </button>
+            ))}
+          </div>
         </div>
-        <div className="bg-white p-10 md:p-16 brutal-border yellow-glow">
-          <form className="space-y-8" onSubmit={(e) => {
-            e.preventDefault();
-            onAction("Message sent! Our team will respond shortly.");
-          }}>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Full Name</label>
-              <input className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black placeholder:text-black/30 font-mono text-sm font-bold" placeholder="John Doe" type="text"/>
+
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#8B5CF6]/20 to-[#3ACBB1]/20 blur-[100px] -z-10" />
+          
+          <div className="bg-[#111] rounded-[3.5rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col h-[600px]">
+            {/* Bot Header */}
+            <div className="p-8 border-b border-white/5 bg-white/[0.02] flex items-center justify-between">
+               <div className="flex items-center gap-4">
+                 <div className="w-12 h-12 bg-[#3ACBB1] rounded-2xl flex items-center justify-center text-black">
+                   <Bot className="w-6 h-6" />
+                 </div>
+                 <div>
+                   <p className="text-white font-black text-sm uppercase tracking-widest">Zynapse AI v2.4</p>
+                   <p className="text-[#3ACBB1] text-[10px] font-bold flex items-center gap-1.5">
+                     <span className="w-1.5 h-1.5 rounded-full bg-[#3ACBB1] animate-pulse" />
+                     Online & Ready
+                   </p>
+                 </div>
+               </div>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Email Address</label>
-              <input className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black placeholder:text-black/30 font-mono text-sm font-bold" placeholder="john@enterprise.com" type="email"/>
+
+            {/* Chat Body */}
+            <div className="flex-1 overflow-y-auto p-8 space-y-6 scrollbar-thin scrollbar-thumb-white/10">
+              {messages.map((msg, i) => (
+                <motion.div 
+                  key={i}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div className={`max-w-[85%] p-5 rounded-3xl font-medium text-sm leading-relaxed ${
+                    msg.role === 'user' 
+                      ? 'bg-[#3ACBB1] text-black rounded-tr-none' 
+                      : 'bg-white/5 border border-white/10 text-white rounded-tl-none'
+                  }`}>
+                    {msg.text}
+                  </div>
+                </motion.div>
+              ))}
+              {loading && (
+                <div className="flex justify-start">
+                  <div className="bg-white/5 border border-white/10 p-5 rounded-3xl rounded-tl-none flex items-center gap-3">
+                    <Loader2 className="w-4 h-4 text-[#3ACBB1] animate-spin" />
+                    <span className="text-xs font-bold text-slate-400">Analysing request...</span>
+                  </div>
+                </div>
+              )}
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Project Type</label>
-                <select className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black appearance-none font-mono text-sm font-bold">
-                  <option>SaaS Platform</option>
-                  <option>Mobile App</option>
-                  <option>Zynapse Web</option>
-                </select>
-              </div>
-              <div className="space-y-2">
-                <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Budget</label>
-                <select className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black appearance-none font-mono text-sm font-bold">
-                  <option>₹50k - ₹1.5L</option>
-                  <option>₹1.5L - ₹5L</option>
-                  <option>₹5L+</option>
-                </select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black uppercase tracking-[0.4em] text-black">Project Brief</label>
-              <textarea className="w-full bg-white brutal-border p-5 focus:ring-4 focus:ring-accent/50 text-black placeholder:text-black/30 font-mono text-sm font-bold" placeholder="Tell us about your vision..." rows={4}></textarea>
-            </div>
-            <button className="w-full py-6 bg-black text-white font-black text-sm uppercase tracking-[0.2em] brutal-border hover:bg-accent hover:text-black transition-all">
-              Send Intelligence
-            </button>
-          </form>
+
+            {/* Input Area */}
+            <form onSubmit={handleSend} className="p-6 bg-white/[0.02] border-t border-white/5 flex gap-4">
+              <input 
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask anything about Zynapse..."
+                className="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-[#3ACBB1]/50 text-white placeholder:text-white/20"
+              />
+              <button 
+                type="submit"
+                disabled={loading}
+                className="bg-[#3ACBB1] hover:bg-[#32b099] disabled:opacity-50 text-black w-14 h-14 rounded-2xl flex items-center justify-center transition-all shadow-lg shadow-[#3ACBB1]/20 shrink-0"
+              >
+                <Send className="w-5 h-5" />
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </section>
@@ -1524,7 +1595,7 @@ const OfficeMap = () => {
                 </div>
                 <div className="space-y-3">
                   <p className="text-slate-400 font-black uppercase text-[11px] tracking-[0.3em]">Email Support</p>
-                  <p className="text-[#1A2B56] font-extrabold text-xl break-all">contact@template.com</p>
+                  <p className="text-[#1A2B56] font-extrabold text-xl break-all">intelligence@zynapse.io</p>
                 </div>
               </div>
             </div>
@@ -1618,65 +1689,39 @@ const Footer = ({ onAction, setView }: { onAction: (m: string) => void, setView?
             </ul>
           </div>
 
-          {/* Column 3: Contact Us */}
+          {/* Column 3: AI Assistant */}
           <div>
             <div className="flex items-center gap-3 mb-10">
-              <div className="w-6 h-[2px] bg-[#3B82F6]" />
-              <h3 className="text-[#3B82F6] text-xs font-black tracking-[0.2em] uppercase">Contact Us</h3>
+              <div className="w-6 h-2 bg-[#3ACBB1]" />
+              <h3 className="text-[#3ACBB1] text-xs font-black tracking-[0.2em] uppercase">AI Assistant</h3>
             </div>
             
             <div className="space-y-8">
-              {/* Address */}
-              <div className="flex gap-5">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
-                  <MapPin className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Address</p>
-                  <p className="text-slate-300 text-sm leading-relaxed">
-                    Coimbatore & Erode, Tamil Nadu
-                  </p>
-                </div>
-              </div>
+              <p className="text-slate-400 text-sm leading-relaxed font-medium">
+                Connect with our intelligent advisor for instant support and strategic business consultation.
+              </p>
 
-              {/* Phone */}
-              <div className="flex gap-5">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
-                  <Phone className="w-5 h-5" />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Phone</p>
-                  <p className="text-slate-300 text-sm font-bold">+91 8072117912</p>
-                </div>
-              </div>
+              <button 
+                onClick={() => {
+                  if (setView) {
+                    setView("main");
+                    setTimeout(() => document.getElementById('ai-bot')?.scrollIntoView({ behavior: 'smooth' }), 100);
+                  }
+                }}
+                className="w-full py-4 bg-[#3ACBB1]/10 border border-[#3ACBB1]/20 text-[#3ACBB1] rounded-2xl flex items-center justify-center gap-3 font-bold uppercase tracking-widest text-[10px] hover:bg-[#3ACBB1] hover:text-black transition-all group shadow-lg shadow-[#3ACBB1]/5"
+              >
+                <Bot className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+                Talk to AI Bot
+              </button>
 
-              {/* Email */}
-              <div className="flex gap-5">
-                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-[#3B82F6] flex-shrink-0">
-                  <Mail className="w-5 h-5" />
+              <div className="pt-8 border-t border-white/5 space-y-4">
+                <div className="flex items-center gap-4 text-slate-400">
+                  <Mail className="w-4 h-4 text-[#3ACBB1]" />
+                  <span className="text-xs font-bold">zynapse@gmail.com</span>
                 </div>
-                <div>
-                  <p className="text-[10px] font-black tracking-widest text-slate-500 uppercase mb-2">Email</p>
-                  <p className="text-slate-300 text-sm font-bold">zynapse@gmail.com</p>
-                </div>
-              </div>
-
-              {/* Schedule Widget */}
-              <div className="mt-12 bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm font-medium">Mon – Sat</span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-white font-bold text-sm tracking-tight">9 AM – 6 PM</span>
-                    <span className="px-3 py-1 bg-[#10B981]/20 text-[#10B981] text-[10px] font-black rounded-lg">OPEN</span>
-                  </div>
-                </div>
-                <div className="h-[1px] bg-white/5" />
-                <div className="flex items-center justify-between">
-                  <span className="text-slate-400 text-sm font-medium">Sunday</span>
-                  <div className="flex items-center gap-4">
-                    <span className="text-white font-bold text-sm tracking-tight">Closed</span>
-                    <span className="px-3 py-1 bg-red-500/20 text-red-500 text-[10px] font-black rounded-lg">HOLIDAY</span>
-                  </div>
+                <div className="flex items-center gap-4 text-slate-400">
+                  <Phone className="w-4 h-4 text-[#3ACBB1]" />
+                  <span className="text-xs font-bold">+91 8072117912</span>
                 </div>
               </div>
             </div>
@@ -1808,133 +1853,6 @@ const ProcessJourneyView = () => {
   );
 };
 
-const ReadyToGrow = ({ onAction }: { onAction: (m: string) => void }) => {
-  return (
-    <section className="py-24 bg-[#1A2B56] text-white overflow-hidden relative" id="contact">
-      {/* Background patterns */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#3ACBB1] rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#3ACBB1] rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2" />
-      </div>
-
-      <div className="max-w-7xl mx-auto px-6 relative z-10 text-center">
-        {/* Badge */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/20 bg-white/5 mb-10"
-        >
-          <div className="w-2 h-2 rounded-full bg-[#3ACBB1] animate-pulse" />
-          <span className="text-[10px] font-black tracking-[0.3em] uppercase">Free Consultation Available</span>
-        </motion.div>
-
-        {/* Heading */}
-        <motion.h2 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
-          className="text-5xl md:text-7xl font-black mb-6 leading-tight"
-        >
-          Ready to Grow Your <br />
-          <span className="text-[#3ACBB1]">Business Online?</span>
-        </motion.h2>
-
-        {/* Subheading */}
-        <motion.p 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-          className="text-lg md:text-xl text-white/70 max-w-2xl mx-auto mb-12 font-medium"
-        >
-          Talk to our team today — free consultation, transparent pricing, and guaranteed delivery. Join 1500+ Tamil Nadu businesses who trust us.
-        </motion.p>
-
-        {/* Buttons */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.3 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-6 mb-24"
-        >
-          <button 
-            onClick={() => onAction("Redirecting to WhatsApp...")}
-            className="w-full sm:w-auto px-10 py-5 bg-[#25D366] hover:bg-[#128C7E] text-white rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm transition-all shadow-xl shadow-green-500/20"
-          >
-            <MessageCircle className="w-6 h-6" />
-            WhatsApp Us Now
-          </button>
-          <button 
-            onClick={() => onAction("Initiating call...")}
-            className="w-full sm:w-auto px-10 py-5 bg-transparent border-2 border-white/20 hover:border-[#3ACBB1] hover:bg-[#3ACBB1]/10 text-white rounded-2xl flex items-center justify-center gap-3 font-black uppercase tracking-widest text-sm transition-all"
-          >
-            <Phone className="w-6 h-6" />
-            Call +91 8072117912
-          </button>
-        </motion.div>
-
-        {/* Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 text-left mb-20 border-t border-white/10 pt-20">
-          <div className="flex items-start gap-5">
-            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
-              <MapPin className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Location</p>
-              <p className="font-bold text-white">Coimbatore & Erode, Tamil Nadu</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-5">
-            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
-              <Mail className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Email</p>
-              <p className="font-bold text-white">zynapse@gmail.com</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-5">
-            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
-              <Phone className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Phone</p>
-              <p className="font-bold text-white">+91 8072117912</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-5">
-            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center text-[#3ACBB1] flex-shrink-0">
-              <Clock className="w-6 h-6" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black tracking-widest text-white/40 uppercase mb-1">Working Hours</p>
-              <p className="font-bold text-white">Mon–Sat, 9AM – 7PM</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Mini Features */}
-        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-          {[
-            "Free Consultation",
-            "No Hidden Charges",
-            "On-Time Delivery",
-            "1500+ Clients Served",
-            "Post-Support Included"
-          ].map((feature, i) => (
-            <div key={i} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-white/50">
-              <CheckCircle2 className="w-4 h-4 text-[#3ACBB1]" />
-              {feature}
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
 
 const Loader = () => (
   <motion.div 
@@ -1995,7 +1913,7 @@ const RefundPolicyView = () => {
             </h3>
             <p className="text-slate-600 mb-6 font-medium">If a client wishes to cancel an ongoing project or service, they must send an official request to:</p>
             <div className="bg-[#1A2B56] p-6 rounded-2xl inline-block mb-6">
-              <p className="text-[#3ACBB1] font-black tracking-widest text-lg">📧 contact@tamilnadudigital.com</p>
+              <p className="text-[#3ACBB1] font-black tracking-widest text-lg">📧 intelligence@zynapse.io</p>
             </div>
             <div className="flex items-start gap-4 p-4 bg-red-50 border border-red-100 rounded-2xl text-red-600 text-sm font-bold mb-6">
               <span className="text-xl">⚠️</span>
@@ -2058,7 +1976,7 @@ const RefundPolicyView = () => {
 
           <section className="bg-[#3ACBB1] p-12 rounded-[3rem] text-white">
             <h3 className="text-3xl font-black mb-6">How to Request a Refund</h3>
-            <p className="font-bold mb-8 text-white/90">Email us at contact@tamilnadudigital.com include your reason, service name, and payment details.</p>
+            <p className="font-bold mb-8 text-white/90">Email us at intelligence@zynapse.io include your reason, service name, and payment details.</p>
             <div className="flex flex-wrap gap-4">
               <span className="px-4 py-2 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">Original Source Only</span>
               <span className="px-4 py-2 bg-white/20 rounded-full text-xs font-black uppercase tracking-widest border border-white/20">Verified Terms</span>
@@ -2150,7 +2068,7 @@ const PrivacyPolicyView = () => {
                </div>
                <div>
                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Inquiries</p>
-                 <p className="text-[#1A2B56] font-black">support@tamilnadudigital.com</p>
+                 <p className="text-[#1A2B56] font-black">intelligence@zynapse.io</p>
                </div>
             </div>
           </section>
@@ -2199,7 +2117,7 @@ export default function App() {
               <CoreServices onAction={showToast} />
               <Process />
               <TeamSection />
-              <ReadyToGrow onAction={showToast} />
+              <AIBotSection />
               <TeamFeatures />
               <OfficeMap />
             </motion.div>
@@ -2237,6 +2155,42 @@ export default function App() {
         </AnimatePresence>
       </main>
       <Footer onAction={showToast} setView={handleSetView} />
+
+      {/* Persistent Floating Interaction Buttons */}
+      <div className="fixed bottom-8 left-8 right-8 pointer-events-none z-[100] flex justify-between items-end">
+        {/* WhatsApp Integration (Left) */}
+        <motion.a
+          initial={{ opacity: 0, x: -20, scale: 0.8 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          whileHover={{ scale: 1.1, y: -5 }}
+          whileTap={{ scale: 0.9 }}
+          href="https://wa.me/918072117912"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="pointer-events-auto w-16 h-16 bg-[#25D366] text-white rounded-2xl flex items-center justify-center shadow-[0_20px_40px_rgba(37,211,102,0.3)] group hover:shadow-[0_25px_50px_rgba(37,211,102,0.4)] transition-all relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+          <MessageCircle className="w-8 h-8 relative z-10" />
+          <span className="absolute -top-12 left-0 bg-black text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">WhatsApp Us</span>
+        </motion.a>
+
+        {/* AI Bot Integration (Right) - Scroll Trigger */}
+        <motion.button
+          initial={{ opacity: 0, x: 20, scale: 0.8 }}
+          animate={{ opacity: 1, x: 0, scale: 1 }}
+          whileHover={{ scale: 1.1, y: -5 }}
+          whileTap={{ scale: 0.9 }}
+          onClick={() => {
+            const element = document.getElementById('ai-bot');
+            if (element) element.scrollIntoView({ behavior: 'smooth' });
+          }}
+          className="pointer-events-auto w-16 h-16 bg-[#3ACBB1] text-black rounded-2xl flex items-center justify-center shadow-[0_20px_40px_rgba(58,203,177,0.3)] group hover:shadow-[0_25px_50px_rgba(58,203,177,0.4)] transition-all relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-white/30 translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
+          <Bot className="w-8 h-8 relative z-10" />
+          <span className="absolute -top-12 right-0 bg-black text-white text-[10px] font-black px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Talk to AI</span>
+        </motion.button>
+      </div>
 
       {/* Global Toast Notification */}
       <AnimatePresence>
