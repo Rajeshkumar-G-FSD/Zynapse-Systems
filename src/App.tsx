@@ -44,208 +44,100 @@ import { useState, useEffect } from "react";
 
 const Navbar = ({ onAction, setView, currentView }: { onAction: (m: string) => void, setView: (v: any) => void, currentView: string }) => {
   return (
-    <nav className="fixed top-0 w-full z-50 glass-nav border-b border-outline px-8 py-4 flex justify-between items-center max-w-full">
-      <div className="flex items-center gap-2 cursor-pointer" onClick={() => setView("main")}>
-        <div className="w-8 h-8 bg-gradient-to-br from-[#3ACBB1] to-[#1A2B56] rounded-lg flex items-center justify-center">
-          <div className="w-4 h-4 bg-white rounded-full opacity-80"></div>
+    <nav className="fixed top-0 w-full z-50 px-12 py-6 flex justify-between items-center bg-transparent backdrop-blur-[2px] border-b border-white/10">
+      <div className="flex items-center gap-3 cursor-pointer" onClick={() => setView("main")}>
+        <div className="relative group">
+          <div className="w-10 h-10 bg-white rotate-45 flex items-center justify-center shadow-lg transition-transform group-hover:rotate-[135deg]">
+            <div className="w-6 h-6 border-4 border-slate-900 -rotate-45"></div>
+          </div>
         </div>
-        <div className="text-xl font-black tracking-tighter text-on-surface uppercase">Zynapse Sys</div>
+        <div className="text-2xl font-black tracking-tight text-white uppercase italic">Corporate</div>
       </div>
 
-      <div className="flex items-center gap-8">
-        <button 
-          onClick={() => { setView("main"); setTimeout(() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
-        >
-          Expertise
+      <div className="hidden lg:flex items-center gap-8">
+        {['HOME', 'ABOUT', 'WE OFFER', 'PORTFOLIO', 'RECENT WORK', 'CONTACT'].map((item) => (
+          <button 
+            key={item}
+            onClick={() => {
+              if (item === 'HOME') setView("main");
+              else onAction(`Navigating to ${item}...`);
+            }}
+            className="text-[11px] font-black tracking-[0.25em] text-white/80 hover:text-white transition-all relative after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-white hover:after:w-full after:transition-all"
+          >
+            {item}
+          </button>
+        ))}
+        <div className="flex items-center gap-1 text-[11px] font-black tracking-[0.25em] text-white/80 cursor-pointer hover:text-white transition-all">
+          PAGES <ChevronDown className="w-3 h-3" />
+        </div>
+      </div>
+
+      <div className="lg:hidden">
+        <button className="text-white">
+          <ChevronDown className="w-6 h-6 rotate-90" />
         </button>
-        <button 
-          onClick={() => { setView("main"); setTimeout(() => document.getElementById('process')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
-        >
-          Process
-        </button>
-        <button 
-          onClick={() => setView("journey")}
-          className={`text-sm font-black uppercase tracking-[0.2em] transition-colors ${currentView === 'journey' ? 'text-[#3ACBB1]' : 'text-on-surface hover:text-[#3ACBB1]'}`}
-        >
-          How it Works
-        </button>
-        <button 
-          onClick={() => { setView("main"); setTimeout(() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }), 100); }}
-          className="text-sm font-black uppercase tracking-[0.2em] text-on-surface hover:text-[#3ACBB1] transition-colors"
-        >
-          Contact
-        </button>
-        <motion.button 
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          onClick={() => onAction("Redirecting to onboarding...")}
-          className="btn-gradient px-8 py-3 rounded-full text-sm font-bold uppercase tracking-wider shadow-lg shadow-[#3ACBB1]/20"
-        >
-          Join Us
-        </motion.button>
       </div>
     </nav>
   );
 };
 
 const Hero = ({ onAction }: { onAction: (m: string) => void }) => {
-  const slides = [
-    {
-      title: "BRING YOUR BUSINESS TO NEXT LEVEL OF EXCELLENCE",
-      subtitle: "Driven by the passion to assist our clients build a robust IT fortress through innovations and agility",
-      image: "https://picsum.photos/seed/excellence/1920/1080?blur=2",
-      button: "Know More"
-    },
-    {
-      title: "WE PROMOTE YOUR DREAM",
-      subtitle: "Zynapse Sys will be a support and ever worthy partner for you to manage",
-      image: "https://picsum.photos/seed/dream/1920/1080?blur=2",
-      button: "Know More"
-    },
-    {
-      title: "CLIENT SPECIFIC SOFTWARE MOULDING",
-      subtitle: "A software should sync with the soul of a company and Zynapse Sys makes sure that it does",
-      image: "https://picsum.photos/seed/software/1920/1080?blur=2",
-      button: "Know More"
-    },
-    {
-      title: "TRANSFORM YOUR BUSINESS WITH THE POWER OF WEB",
-      subtitle: "We help you to attain an unbelievable transformation in your business",
-      image: "https://picsum.photos/seed/web/1920/1080?blur=2",
-      button: "Know More"
-    },
-    {
-      title: "Transform your Business with world-class Software Development",
-      subtitle: "Building data-driven, technology-powered digital solutions to create exceptional customer experiences, streamlined workflow and intelligent strategies that catalyse growth.",
-      image: "https://picsum.photos/seed/team/1920/1080?blur=2",
-      isComplex: true,
-      features: [
-        { icon: <Monitor className="w-10 h-10" />, title: "Digital Transformation", desc: "Smart, scalable, future-ready solutions for your business." },
-        { icon: <Users className="w-10 h-10" />, title: "Software Development", desc: "Custom software tailored to your business needs." },
-        { icon: <Cpu className="w-10 h-10" />, title: "Emerging Technologies", desc: "Harness AI, IoT, and blockchain for a future-ready business." }
-      ]
-    },
-    {
-      title: "INNOVATING FOR A DIGITAL FUTURE",
-      subtitle: "Our deep multi-vertical expertise empowers your business to stay ahead in the rapidly evolving technological landscape.",
-      image: "https://picsum.photos/seed/future/1920/1080?blur=2",
-      button: "Start Free Trial"
-    }
-  ];
-
-  const [currentSlide, setCurrentSlide] = useState(0);
-
-  const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
-  const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-
-  useEffect(() => {
-    const timer = setInterval(nextSlide, 8000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const slide = slides[currentSlide];
-
   return (
-    <section className="relative h-screen w-full overflow-hidden flex items-center justify-center">
-      {/* Background with cross-fade */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentSlide}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1 }}
-          className="absolute inset-0 z-0"
+    <section className="relative h-screen w-full flex flex-col items-center justify-center px-6 overflow-hidden">
+      {/* Background with Dark Overlay */}
+      <div className="absolute inset-0 z-0">
+        <img 
+          src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=1920" 
+          className="w-full h-full object-cover" 
+          alt="Modern Office" 
+          referrerPolicy="no-referrer"
+        />
+        <div className="absolute inset-0 bg-black/50 backdrop-blur-[1px]" />
+      </div>
+
+      <div className="max-w-7xl mx-auto flex flex-col items-center text-center relative z-10">
+        {/* Top Tagline */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-white font-black tracking-[0.4em] uppercase text-[12px] mb-6 drop-shadow-lg"
         >
-          <div className="absolute inset-0 bg-black/60 z-10" />
-          <img 
-            src={slide.image} 
-            className="w-full h-full object-cover" 
-            alt="background" 
-            referrerPolicy="no-referrer"
-          />
+          DISCOVER THE COLORFUL WORLD
         </motion.div>
-      </AnimatePresence>
 
-      <div className="relative z-20 max-w-7xl w-full px-6 md:px-12">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentSlide}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            className="space-y-8"
-          >
-            <div className="max-w-4xl">
-              <motion.h1 
-                className={`font-black tracking-tight leading-[1.1] text-white uppercase ${slide.isComplex ? 'text-4xl md:text-6xl' : 'text-5xl md:text-8xl'}`}
-              >
-                {slide.title.split(' ').map((w, i) => (
-                  <span key={i} className={w.toLowerCase() === 'software' || w.toLowerCase() === 'web' || w.toLowerCase() === 'excellence' ? 'text-primary-accent' : ''}>
-                    {w}{" "}
-                  </span>
-                ))}
-              </motion.h1>
-              
-              <motion.p className="text-lg md:text-xl text-white/80 font-medium max-w-2xl mt-6 leading-relaxed">
-                {slide.subtitle}
-              </motion.p>
-            </div>
-
-            {!slide.isComplex ? (
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => onAction("Redirecting to information page...")}
-                className="bg-[#3ACBB1] hover:bg-[#2CA08A] text-white px-10 py-4 font-bold text-lg transition-colors uppercase tracking-wider"
-              >
-                {slide.button}
-              </motion.button>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 pt-12 border-t border-white/20">
-                {slide.features?.map((f, i) => (
-                  <div key={i} className="flex flex-col gap-4 text-white">
-                    <div className="flex items-center gap-4">
-                      <div className="text-white/80">{f.icon}</div>
-                      <h4 className="text-xl font-bold uppercase tracking-tight">{f.title}</h4>
-                    </div>
-                    <p className="text-sm text-white/60 font-medium">{f.desc}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-
-      {/* Navigation Arrows - Edge Placements */}
-      <div className="absolute inset-y-0 left-0 items-center hidden md:flex z-30 px-8">
-        <motion.button 
-          whileHover={{ x: 5, scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={prevSlide}
-          className="group flex flex-col items-center gap-6 text-white/30 hover:text-white transition-all"
+        {/* Main Heading */}
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-6xl md:text-8xl lg:text-9xl font-black text-white tracking-tighter leading-none mb-8 drop-shadow-2xl"
         >
-          <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white transition-all bg-white/[0.03] backdrop-blur-sm">
-            <ChevronLeft className="w-8 h-8" />
-          </div>
-        </motion.button>
-      </div>
+          BUILD YOUR DREAM
+        </motion.h1>
 
-      <div className="absolute inset-y-0 right-0 items-center hidden md:flex z-30 px-8">
-        <motion.button 
-          whileHover={{ x: -5, scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={nextSlide}
-          className="group flex flex-col items-center gap-6 text-white/30 hover:text-white transition-all"
+        {/* Subheading */}
+        <motion.p 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="text-sm md:text-base text-white/90 font-medium max-w-2xl mb-12 leading-relaxed drop-shadow-md"
         >
-          <div className="w-20 h-20 rounded-full border border-white/10 flex items-center justify-center group-hover:border-white transition-all bg-white/[0.03] backdrop-blur-sm">
-            <ChevronRight className="w-8 h-8" />
-          </div>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod temp
+          or incididunt ut labore et dolore magna aliqua. Ut enim ad minim..
+        </motion.p>
+
+        {/* CTA Button */}
+        <motion.button 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(168, 85, 247, 0.4)" }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onAction("Discovering now...")}
+          className="px-10 py-4 bg-gradient-to-r from-[#8B5CF6] to-[#A855F7] text-white rounded-full font-black uppercase tracking-[0.2em] text-[12px] transition-all shadow-xl shadow-purple-500/20"
+        >
+          DISCOVER NOW
         </motion.button>
       </div>
 
@@ -395,6 +287,211 @@ const Process = () => {
               </div>
             </motion.div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+const TeamSection = () => {
+  const members = [
+    {
+      id: 1,
+      name: "Doug Williams",
+      role: "Product Lead",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+      company: "Visualy",
+      responsibility: "Overseeing product vision and roadmap to ensure we deliver market-leading solutions.",
+      quote: "Our product philosophy is simple: build for the user, and the market will follow."
+    },
+    {
+      id: 2,
+      name: "Ken Scott",
+      role: "Marketing Director",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+      company: "Xylo",
+      responsibility: "Driving brand growth and user engagement through data-driven digital strategies.",
+      quote: "Marketing isn't about selling products; it's about telling a story that resonates."
+    },
+    {
+      id: 3,
+      name: "George Dlubal",
+      role: "CEO",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+      company: "Global Software",
+      responsibility: "Leading the organization toward innovation and sustainable digital transformation.",
+      quote: "The future belongs to those who see possibilities before they become obvious."
+    },
+    {
+      id: 4,
+      name: "Sarah Chen",
+      role: "CTO",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
+      company: "Nexus",
+      responsibility: "Architecting scalable systems and leading our engineering team to excellence.",
+      quote: "Complexity is the enemy of reliability. We build clean, robust, and scalable code."
+    },
+    {
+      id: 5,
+      name: "Alex Rivers",
+      role: "Design Lead",
+      image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
+      company: "River Inc",
+      responsibility: "Crafting bespoke user experiences that balance aesthetics with peak functionality.",
+      quote: "Design is not just what it looks like and feels like. Design is how it works."
+    }
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % members.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [members.length]);
+
+  const currentMember = members[currentIndex];
+
+  return (
+    <section className="py-32 bg-white overflow-hidden" id="team">
+      <div className="max-w-7xl mx-auto px-6 lg:px-20">
+        <div className="mb-16">
+          <motion.h2 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-black text-slate-800 tracking-tight leading-tight"
+          >
+            Meet the minds <br />
+            <span className="text-slate-400">behind Corporate</span>
+          </motion.h2>
+        </div>
+
+        <div className="flex flex-col lg:flex-row gap-8 lg:items-center">
+          {/* Static Left Card with Dynamic Content */}
+          <div className="w-full lg:w-[400px] h-[580px] bg-gradient-to-br from-[#1A2B56] to-[#2CA08A] rounded-[2rem] p-10 flex flex-col justify-between text-white shadow-2xl relative shrink-0">
+            <div className="relative">
+              <Quote className="w-10 h-10 opacity-30 mb-8" />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={currentIndex}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <p className="text-xl md:text-2xl font-bold leading-relaxed mb-6 italic">
+                    "{currentMember.quote}"
+                  </p>
+                  <div className="space-y-4">
+                    <div className="h-px w-12 bg-[#3ACBB1]" />
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#3ACBB1] mb-2">Core Responsibility</p>
+                      <p className="text-sm font-medium text-white/80 leading-relaxed">
+                        {currentMember.responsibility}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+            
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={currentIndex}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.05 }}
+                className="flex items-center gap-4 mt-auto pt-8 border-t border-white/10"
+              >
+                <div className="w-14 h-14 rounded-2xl overflow-hidden border-2 border-[#3ACBB1] shrink-0">
+                  <img src={currentMember.image} alt={currentMember.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                </div>
+                <div>
+                  <div className="font-black text-lg tracking-tight">{currentMember.name}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#3ACBB1]">{currentMember.role}</div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Scrolling Right Section */}
+          <div className="flex-1 overflow-hidden relative">
+            <div className="overflow-hidden">
+              <motion.div 
+                className="flex gap-6 shrink-0"
+                animate={{ x: -(currentIndex * 344) }}
+                transition={{ type: "spring", stiffness: 100, damping: 20 }}
+              >
+                {/* Member Cards */}
+                {members.map((member, idx) => (
+                  <motion.div 
+                    key={member.id} 
+                    onClick={() => setCurrentIndex(idx)}
+                    className={`min-w-[320px] h-[580px] rounded-[2rem] overflow-hidden relative group shrink-0 cursor-pointer transition-all duration-500 ${
+                      currentIndex === idx ? 'ring-4 ring-[#3ACBB1] ring-offset-4 ring-offset-white' : 'opacity-60 hover:opacity-100'
+                    }`}
+                  >
+                    <img 
+                      src={member.image} 
+                      className={`w-full h-full object-cover transition-all duration-700 ${
+                        currentIndex === idx ? 'scale-110 grayscale-0' : 'grayscale group-hover:grayscale-0'
+                      }`} 
+                      alt={member.name}
+                      referrerPolicy="no-referrer"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
+                    <div className="absolute bottom-10 left-10 right-10 text-white">
+                      <div className="font-black text-2xl mb-2 tracking-tight">{member.name}</div>
+                      <div className="text-xs font-black uppercase tracking-[0.2em] text-[#3ACBB1]">{member.role}</div>
+                    </div>
+                    
+                    {currentIndex === idx && (
+                      <motion.div 
+                        layoutId="active-indicator"
+                        className="absolute top-8 right-8 bg-[#3ACBB1] text-[#1A2B56] px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-widest"
+                      >
+                        Highlight
+                      </motion.div>
+                    )}
+                  </motion.div>
+                ))}
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="mt-16 flex flex-col md:flex-row items-center justify-between gap-12">
+          <div className="w-full h-[6px] bg-slate-100 rounded-full relative overflow-hidden">
+            <motion.div 
+              className="absolute inset-y-0 left-0 bg-[#1A2B56]"
+              initial={{ width: "0%" }}
+              animate={{ width: `${((currentIndex + 1) / members.length) * 100}%` }}
+            />
+          </div>
+          
+          <div className="flex items-center gap-8 shrink-0">
+            <div className="text-sm font-black text-slate-900 min-w-[80px] flex items-baseline gap-1">
+              <span className="text-3xl text-[#1A2B56]">{currentIndex + 1}</span>
+              <span className="text-slate-400">/ {members.length}</span>
+            </div>
+            <div className="flex gap-3">
+              <button 
+                onClick={() => setCurrentIndex((prev) => (prev - 1 + members.length) % members.length)}
+                className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
+              >
+                <ChevronLeft className="w-6 h-6" />
+              </button>
+              <button 
+                onClick={() => setCurrentIndex((prev) => (prev + 1) % members.length)}
+                className="w-14 h-14 rounded-2xl border-2 border-slate-200 flex items-center justify-center hover:bg-[#1A2B56] hover:text-white transition-all duration-300"
+              >
+                <ChevronRight className="w-6 h-6" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -1912,6 +2009,7 @@ export default function App() {
               <Hero onAction={showToast} />
               <CoreServices onAction={showToast} />
               <Process />
+              <TeamSection />
               <ReadyToGrow onAction={showToast} />
             </motion.div>
           ) : view === "journey" ? (
